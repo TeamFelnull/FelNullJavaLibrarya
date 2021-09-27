@@ -1,4 +1,4 @@
-package dev.felnull.felnulllib.util;
+package dev.felnull.fnjl.util;
 
 /**
  * 色関係
@@ -6,7 +6,7 @@ package dev.felnull.felnulllib.util;
  * @author MORIMORI0317
  * @since 1.0
  */
-public class ColorUtil {
+public class FNColorUtil {
 
     /**
      * 16進数カラーコードから赤色を取得

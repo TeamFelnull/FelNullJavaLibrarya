@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-public class DataUtil {
+public class FNDataUtil {
 
     /**
      * ストリームをバイト配列へ変換
