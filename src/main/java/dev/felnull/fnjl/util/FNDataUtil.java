@@ -63,6 +63,7 @@ public class FNDataUtil {
      *
      * @param data バイト配列
      * @return ハッシュバイト配列
+     * @throws NoSuchAlgorithmException エラー
      */
     public static byte[] createMD5Hash(byte[] data) throws NoSuchAlgorithmException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
