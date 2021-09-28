@@ -4,9 +4,9 @@ plugins {
     id 'signing'
 }
 
-group 'dev.felnull.fnjl'
+group 'dev.felnull'
 archivesBaseName = "felnull-java-library"
-version '1.0'
+version '1.2'
 
 repositories {
     mavenCentral()
@@ -46,6 +46,10 @@ publishing {
                         id = 'FelNull'
                         name = 'TeamFelNull'
                         email = 'teamfelnull@m.servg.red'
+                    }
+                    developer {
+                        id = 'MORIMORI0317'
+                        name = 'MORIMORI0317'
                     }
                 }
                 scm {

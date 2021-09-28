@@ -62,23 +62,41 @@ public class FNURLUtil {
         return sb.toString();
     }
 
+    /**
+     * 非同期でストリームを取得
+     * 失敗時はnullを返す
+     * @param url URL
+     * @param streamConsumer ストリーム
+     * @return 処理結果
+     */
     public static CompletableFuture<Void> getStreamAsync(URL url, Consumer<InputStream> streamConsumer) {
         return CompletableFuture.runAsync(() -> {
+            InputStream stream = null;
             try {
-                streamConsumer.accept(getStream(url));
+                stream = getStream(url);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            streamConsumer.accept(stream);
         });
     }
 
+    /**
+     * 非同期で文字列を取得
+     * 失敗時はnullを返す
+     * @param url URL
+     * @param stringConsumer 文字列
+     * @return 処理結果
+     */
     public static CompletableFuture<Void> getResponseAsync(URL url, Consumer<String> stringConsumer) {
         return CompletableFuture.runAsync(() -> {
+            String str = null;
             try {
-                stringConsumer.accept(getResponse(url));
+                str = getResponse(url);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            stringConsumer.accept(str);
         });
     }
 }
