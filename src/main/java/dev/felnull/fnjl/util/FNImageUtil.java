@@ -3,8 +3,10 @@ package dev.felnull.fnjl.util;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 画像関係
@@ -69,5 +71,17 @@ public class FNImageUtil {
         byte[] imgebyte = baos.toByteArray();
         baos.close();
         return imgebyte;
+    }
+
+    /**
+     * BufferedImageをInputStreamに変換
+     *
+     * @param image      変換先
+     * @param formatName pngなどフォーマット名
+     * @return 変換済みInputStream
+     * @throws IOException 変換失敗
+     */
+    public static InputStream toInputStream(BufferedImage image, String formatName) throws IOException {
+        return new ByteArrayInputStream(toByteArray(image, formatName));
     }
 }
