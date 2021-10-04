@@ -156,4 +156,21 @@ public class FNColorUtil {
         }
         return mostObject;
     }
+
+    /**
+     * 色を平均的に混ぜた色を取得する
+     *
+     * @param colors 混合する色
+     * @return 混合した色
+     */
+    public static int getAverageMixColor(int... colors) {
+        double r = 0, g = 0, b = 0;
+        for (int color : colors) {
+            r += getRed(color);
+            g += getGreen(color);
+            b += getBlue(color);
+        }
+        return getHexColor((int) (r / colors.length), (int) (g / colors.length), (int) (b / colors.length));
+    }
+
 }

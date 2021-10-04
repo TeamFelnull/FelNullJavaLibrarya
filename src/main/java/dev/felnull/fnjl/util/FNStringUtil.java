@@ -1,5 +1,6 @@
 package dev.felnull.fnjl.util;
 
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -10,6 +11,8 @@ import java.util.Base64;
  * @since 1.0
  */
 public class FNStringUtil {
+    private static final String[] unit = {"K", "M", "G", "T", "P", "E", "Z", "Y"};
+
     /**
      * UTFエスケープシーケンス文字列を文字列に変換
      *
@@ -57,6 +60,34 @@ public class FNStringUtil {
      */
     public static String encodeBase64(String original) {
         return Base64.getEncoder().encodeToString(original.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 拡張子を取得する
+     *
+     * @param name 名前
+     * @return 拡張子
+     */
+    public static String getExtension(String name) {
+        String[] sps = name.split("\\.");
+        if (sps.length > 1)
+            return sps[sps.length - 1];
+        return null;
+    }
+
+    /**
+     * バイト容量表記（単位付き）を取得
+     *
+     * @param length サイズ
+     * @return 容量表記
+     */
+    public static String getByteDisplay(long length) {
+        int keta = (int) Math.floor(Math.log10(length));
+        if (keta <= 2)
+            return String.format("%sByte", length);
+        int kets = keta - 2;
+        float val = (float) ((float) length / Math.pow(1000, 1 + (int) Math.floor(((float) kets / 3))));
+        return String.format("%s%sB", val, unit[(int) Math.floor(((float) kets / 3f))]);
     }
 
 }
