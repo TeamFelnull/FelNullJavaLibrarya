@@ -1,5 +1,7 @@
 package dev.felnull.fnjl.util;
 
+import java.util.function.Function;
+
 /**
  * 色関係
  *
@@ -129,4 +131,29 @@ public class FNColorUtil {
         return most;
     }
 
+    /**
+     * 近似色のオブジェクトを取得する
+     * 16新数のカラーコード
+     *
+     * @param target      対象色
+     * @param colors      比較色オブジェクト
+     * @param colorGetter 比較色取得
+     * @param <T>         比較オブジェクト
+     * @return 比較色の中で最も近い色のオブジェクト
+     */
+    public static <T> T getApproximateColorObject(int target, T[] colors, Function<T, Integer> colorGetter) {
+        T mostObject = null;
+        double mostDis = Double.MAX_VALUE;
+        for (T color : colors) {
+            int col = colorGetter.apply(color);
+            if (target == col)
+                return color;
+            double dis = getColorDistance(target, col);
+            if (dis < mostDis) {
+                mostDis = dis;
+                mostObject = color;
+            }
+        }
+        return mostObject;
+    }
 }
