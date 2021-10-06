@@ -16,10 +16,10 @@ public class FileWatcher extends Thread {
     private final WatchService watchService;
 
     public FileWatcher(Path path, Consumer<WatchEvent<?>> listener, WatchEvent.Kind<?>... events) throws IOException {
-        this.path = path;
+        this.path = path.toAbsolutePath();
         this.listener = listener;
         this.watchService = FileSystems.getDefault().newWatchService();
-        path.getParent().register(watchService, events);
+        this.path.getParent().register(watchService, events);
     }
 
     @Override

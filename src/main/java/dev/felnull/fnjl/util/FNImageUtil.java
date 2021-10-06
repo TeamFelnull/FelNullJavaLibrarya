@@ -52,7 +52,7 @@ public class FNImageUtil {
     public static BufferedImage resize(BufferedImage image, int width, int height, int hints) {
         BufferedImage out = new BufferedImage(width, height, image.getType());
         Graphics2D graphics = out.createGraphics();
-        graphics.drawImage(image.getScaledInstance(width, height, hints), 0, 0, image.getWidth(), image.getHeight(), null);
+        graphics.drawImage(image.getScaledInstance(width, height, hints), 0, 0, width, height, null);
         return out;
     }
 
