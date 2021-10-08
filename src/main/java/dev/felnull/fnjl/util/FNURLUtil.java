@@ -1,5 +1,7 @@
 package dev.felnull.fnjl.util;
 
+import dev.felnull.fnjl.FelNullJavaLibrary;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +19,17 @@ import java.util.function.Consumer;
  * @since 1.0
  */
 public class FNURLUtil {
-    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36";
+    /**
+     * ユーザエージェント取得
+     *
+     * @return ユーザエージェント
+     */
+    public static String getUserAgent() {
+        String jv = System.getProperty("java.version");
+        String jvn = System.getProperty("java.vm.name");
+        String jvv = System.getProperty("java.vm.version");
+        return String.format("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36 %s %s", "Java/" + jv + " (" + jvn + "; " + jvv + ")", "FelNullJavaLibrary/" + FelNullJavaLibrary.getVersion());
+    }
 
     /**
      * 接続を確立する
@@ -28,7 +40,7 @@ public class FNURLUtil {
      */
     public static HttpURLConnection getConnection(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.addRequestProperty("user-agent", USER_AGENT);
+        connection.addRequestProperty("user-agent", getUserAgent());
         return connection;
     }
 
@@ -41,7 +53,7 @@ public class FNURLUtil {
      */
     public static InputStream getStream(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.addRequestProperty("user-agent", USER_AGENT);
+        connection.addRequestProperty("user-agent", getUserAgent());
         return connection.getInputStream();
     }
 
@@ -65,7 +77,8 @@ public class FNURLUtil {
     /**
      * 非同期でストリームを取得
      * 失敗時はnullを返す
-     * @param url URL
+     *
+     * @param url            URL
      * @param streamConsumer ストリーム
      * @return 処理結果
      */
@@ -84,7 +97,8 @@ public class FNURLUtil {
     /**
      * 非同期で文字列を取得
      * 失敗時はnullを返す
-     * @param url URL
+     *
+     * @param url            URL
      * @param stringConsumer 文字列
      * @return 処理結果
      */
