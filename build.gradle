@@ -6,7 +6,7 @@ plugins {
 
 group 'dev.felnull'
 archivesBaseName = "felnull-java-library"
-version '1.7'
+version '1.8'
 
 repositories {
     mavenCentral()
@@ -84,3 +84,5 @@ javadoc {
     options.charSet = 'UTF-8'
     options.encoding = 'UTF-8'
 }
+
+
