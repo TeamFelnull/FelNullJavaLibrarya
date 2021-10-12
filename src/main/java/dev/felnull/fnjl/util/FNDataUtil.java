@@ -12,6 +12,12 @@ import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * データ関連
+ *
+ * @author MORIMORI0317
+ * @since 1.0
+ */
 public class FNDataUtil {
 
     /**

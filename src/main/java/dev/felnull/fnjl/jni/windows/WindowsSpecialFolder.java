@@ -2,6 +2,12 @@ package dev.felnull.fnjl.jni.windows;
 
 import java.nio.file.Path;
 
+/**
+ * Windowsの特殊パスを取得
+ *
+ * @author MORIMORI0317
+ * @since 1.10
+ */
 public enum WindowsSpecialFolder {
     DESKTOP(0x0000),
     INTERNET(0x0001),
@@ -75,6 +81,11 @@ public enum WindowsSpecialFolder {
         return num;
     }
 
+    /**
+     * パス取得
+     *
+     * @return パス
+     */
     public Path getFolderPath() {
         return WindowsLibrary.getSpecialFolderPath(getNum());
     }

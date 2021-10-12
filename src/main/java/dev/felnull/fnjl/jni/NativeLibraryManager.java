@@ -11,11 +11,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * JNIを利用したネイティブライブラリ管理
+ *
+ * @author MORIMORI0317
+ * @since 1.10
+ */
 public class NativeLibraryManager {
     private static boolean inited;
     private static boolean load;
     private static Path libraryFolder;
 
+    /**
+     * JNIライブラリを読み込む
+     */
     public static void loadLibrary() {
         if (inited)
             return;
@@ -30,10 +39,20 @@ public class NativeLibraryManager {
         }
     }
 
+    /**
+     * 読み込みに失敗したかどうか
+     *
+     * @return 失敗
+     */
     public static boolean isLoadFailure() {
         return inited && !load;
     }
 
+    /**
+     * ライブラリを抽出するパスを指定
+     *
+     * @param path 指定パス
+     */
     public static void setLibraryFolderPath(Path path) {
         libraryFolder = path;
     }
@@ -72,7 +91,8 @@ public class NativeLibraryManager {
 
     private static void extractLibrary(OSs.Type os, String aarch) throws IOException {
         String libname = "FNJL" + aarch + "." + os.getLibName();
-        InputStream stream = NativeLibraryManager.class.getResourceAsStream("../../../../natives/" + libname);
+        InputStream stream = NativeLibraryManager.class.getResourceAsStream("../natives/" + libname);
+        System.out.println(NativeLibraryManager.class.getPackage().getName());
         if (stream == null)
             throw new IOException("Library does not exist");
 

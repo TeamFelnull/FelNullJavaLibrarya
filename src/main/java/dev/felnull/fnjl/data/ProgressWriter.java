@@ -6,6 +6,12 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * 進行率を取得しながら書き込む
+ *
+ * @author MORIMORI0317
+ * @since 1.8あたり
+ */
 public class ProgressWriter {
     private final InputStream stream;
     private final long length;
@@ -45,6 +51,7 @@ public class ProgressWriter {
                 public long getLength() {
                     return length;
                 }
+
                 @Override
                 public long getWrittenLength() {
                     return finalCt;
