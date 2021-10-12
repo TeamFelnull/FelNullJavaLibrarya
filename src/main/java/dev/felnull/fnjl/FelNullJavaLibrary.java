@@ -9,4 +9,14 @@ public class FelNullJavaLibrary {
     public static String getVersion() {
         return BuildIn.VERSION;
     }
+
+    /**
+     * ネイティブライブラリのバージョン
+     *
+     * @return バージョン
+     */
+    public static int getNativeLibVersion() {
+        return BuildIn.NATIVE_LIB_VERSION;
+    }
+
 }
