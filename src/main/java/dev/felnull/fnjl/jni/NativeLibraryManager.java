@@ -91,8 +91,13 @@ public class NativeLibraryManager {
 
     private static void extractLibrary(OSs.Type os, String aarch) throws IOException {
         String libname = "FNJL" + aarch + "." + os.getLibName();
-        InputStream stream = NativeLibraryManager.class.getResourceAsStream("../natives/" + libname);
-        System.out.println(NativeLibraryManager.class.getPackage().getName());
+        String pp = FelNullJavaLibrary.class.getPackage().getName().replace(".", "/") + "/natives/" + libname;
+
+        InputStream stream = NativeLibraryManager.class.getResourceAsStream("/" + pp);
+
+        if (stream == null)
+            stream = ClassLoader.getSystemResourceAsStream(pp);
+
         if (stream == null)
             throw new IOException("Library does not exist");
 
