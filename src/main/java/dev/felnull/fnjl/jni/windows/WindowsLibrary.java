@@ -37,4 +37,22 @@ public class WindowsLibrary {
             return null;
         }
     }
+
+    /**
+     * 0 - IconTitleLogFont
+     * 1 - MessageFont
+     * 2 - CaptionFont
+     * 3 - MenuFont
+     * 4 - SmCaptionFont
+     * 5 - StatusFont
+     *
+     * @param num 番号
+     * @return フォント名
+     */
+    public static String getSystemFontFaceName(int num) {
+        if (!init())
+            return null;
+        return WindowsNative.getSystemFontFaceName(num);
+    }
+
 }
