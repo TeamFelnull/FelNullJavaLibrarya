@@ -90,4 +90,57 @@ public class FNStringUtil {
         return String.format("%s%sB", val, unit[(int) Math.floor(((float) kets / 3f))]);
     }
 
+    /**
+     * HTML特殊文字を通常の文字に変換する
+     *
+     * @param text 特殊文字
+     * @return 文字列
+     * @see <a href="https://www.cis.twcu.ac.jp/~asakawa/comp2d-2008/special_chars.html">label</a>
+     */
+    public static String decodeHTMLSpecialCharacter(String text) {
+        text = text.replace("\u200B", "");
+        text = text.replace("\u3000", " ");
+        text = text.replace("&lt;", "<");
+        text = text.replace("&gt;", ">");
+        text = text.replace("&amp;", "&");
+        text = text.replace("&quot;", "\"");
+        text = text.replace("&#39;", "'");
+        text = text.replace("&nbsp;", " ");
+        text = text.replace("&iexcl;", "¡");
+        text = text.replace("&cent;", "¢");
+        text = text.replace("&pound;", "£");
+        text = text.replace("&curren;", "¤");
+        text = text.replace("&yen;", "¥");
+        text = text.replace("&euro;", "€");
+        text = text.replace("&brvbar;", "¦");
+        text = text.replace("&sect;", "§");
+        text = text.replace("&uml;", "¨");
+        text = text.replace("&copy;", "©");
+        text = text.replace("&ordf;", "ª");
+        text = text.replace("&laquo;", "«");
+        text = text.replace("&not;", "¬");
+        text = text.replace("&shy;", "");
+        text = text.replace("&reg;", "®");
+        text = text.replace("&macr;", "¯");
+        text = text.replace("&deg;", "°");
+        text = text.replace("&plusmn;", "±");
+        text = text.replace("&sup2;", "²");
+        text = text.replace("&sup3;", "³");
+        text = text.replace("&acute;", "´");
+        text = text.replace("&micro;", "µ");
+        text = text.replace("&para;", "¶");
+        text = text.replace("&middot;", "·");
+        text = text.replace("&cedil;", "¸");
+        text = text.replace("&sup1;", "¹");
+        text = text.replace("&ordm;", "º");
+        text = text.replace("&raquo;", "»");
+        text = text.replace("&frac14;", "¼");
+        text = text.replace("&frac12;", "½");
+        text = text.replace("&frac34;", "¾");
+        text = text.replace("&iquest;", "¿");
+        text = text.replace("&circ;", "ˆ");
+        text = text.replace("&tilde;", "˜");
+        return text;
+    }
+
 }
