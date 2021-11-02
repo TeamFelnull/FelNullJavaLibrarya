@@ -95,7 +95,7 @@ public class FNStringUtil {
      *
      * @param text 特殊文字
      * @return 文字列
-     * @see <a href="https://www.cis.twcu.ac.jp/~asakawa/comp2d-2008/special_chars.html">label</a>
+     * @see <a href="https://www.cis.twcu.ac.jp/~asakawa/comp2d-2008/special_chars.html">参考</a>
      */
     public static String decodeHTMLSpecialCharacter(String text) {
         text = text.replace("\u200B", "");
@@ -143,4 +143,45 @@ public class FNStringUtil {
         return text;
     }
 
+    /**
+     * 百分率を返す
+     *
+     * @param complete 達成済み進捗度
+     * @param total    合計進捗度
+     * @return 百分率
+     */
+    public static String getPercentage(int complete, int total) {
+        return getPercentage((double) complete / total);
+    }
+
+    /**
+     * 百分率を返す
+     *
+     * @param complete 達成済み進捗度
+     * @param total    合計進捗度
+     * @return 百分率
+     */
+    public static String getPercentage(long complete, long total) {
+        return getPercentage((double) complete / total);
+    }
+
+    /**
+     * 百分率を返す
+     *
+     * @param par 進捗度
+     * @return 百分率
+     */
+    public static String getPercentage(double par) {
+        return (int) (par * 100) + "%";
+    }
+
+    /**
+     * 百分率を返す
+     *
+     * @param par 進捗度
+     * @return 百分率
+     */
+    public static String getPercentage(float par) {
+        return (int) (par * 100) + "%";
+    }
 }

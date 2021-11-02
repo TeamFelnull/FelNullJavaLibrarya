@@ -1,4 +1,4 @@
-package dev.felnull.fnjl.data;
+package dev.felnull.fnjl.io;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

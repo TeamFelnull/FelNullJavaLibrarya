@@ -1,6 +1,6 @@
 package dev.felnull.fnjl.util;
 
-import dev.felnull.fnjl.data.ProgressWriter;
+import dev.felnull.fnjl.io.ProgressWriter;
 
 import java.io.*;
 import java.net.HttpURLConnection;
