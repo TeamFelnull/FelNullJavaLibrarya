@@ -20,11 +20,12 @@ public class FileWatcher extends Thread {
         this.listener = listener;
         this.watchService = FileSystems.getDefault().newWatchService();
         this.path.getParent().register(watchService, events);
+        setName(path + " watcher");
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (isAlive()) {
             try {
                 WatchKey take = watchService.take();
                 for (WatchEvent<?> pollEvent : take.pollEvents()) {
