@@ -1,0 +1,57 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Docs Data Update Remote
+
+# Triggers the action as scheduled
+on:
+  push:
+#  # Runs on 10 minutes past every hour（毎 n 時 10 分に実行）
+#  schedule:
+#    # Ref:
+#    #   - https://help.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule
+#    #   - https://crontab.guru/examples.html
+#    # Cron format:
+#    #         ┌───────────── minute (0 - 59)
+#    #         │ ┌───────────── hour (0 - 23)
+#    #         │ │ ┌───────────── day of the month (1 - 31)
+#    #         │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+#    #         │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+#    #         │ │ │ │ │
+#    #         │ │ │ │ │
+#    #         │ │ │ │ │
+#    #         * * * * *
+#    - cron:  '0 4 * * *'
+
+jobs:
+  docs-data-update-remote:
+    runs-on: CyberPanel-1
+    steps:
+      - uses: actions/checkout@v2
+      - name: Git Setup
+        run: |
+          git config --global user.name ${NAME}
+          git config --global user.email ${EMAIL}
+          git config --global pull.rebase merges
+          git pull --unshallow
+        env:
+          NAME: MG8853
+          EMAIL: ${{ secrets.MG8853_MAIL }}
+
+      - name: JavaDocs Update FELNULLJAVALIBRARY
+        run: |
+          git clone https://github.com/TeamFelnull/docs.felnull.dev.git
+          cd docs.felnull.dev
+
+          Java_FELNULLJAVALIBRARY=`curl https://repo1.maven.org/maven2/dev/felnull/felnull-java-library/maven-metadata.xml | xmllint --xpath "/metadata/versioning/latest/text()" - `
+
+          cd Java/FelNullJavaLibrary
+          wget https://repo1.maven.org/maven2/dev/felnull/felnull-java-library/$Java_FELNULLJAVALIBRARY/felnull-java-library-$Java_FELNULLJAVALIBRARY-javadoc.jar  -O felnull-java-library-$Java_FELNULLJAVALIBRARY-javadoc.jar
+          chmod 777 felnull-java-library-$Java_FELNULLJAVALIBRARY-javadoc.jar
+          unzip -o felnull-java-library-$Java_FELNULLJAVALIBRARY-javadoc.jar
+
+      # git ls-files --others --exclude-standard | xargs git add || echo "No changes to commit"
+      - name: Push to Remote Docs Origin
+        run: |
+          git add . || echo "No changes to commit"
+          git commit --all --message=DocsUpdate --verbose || echo "No changes to commit"
+          git push || echo "No changes to commit"
