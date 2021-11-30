@@ -3,10 +3,7 @@ package dev.felnull.fnjl.util;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * 画像関係
@@ -83,5 +80,20 @@ public class FNImageUtil {
      */
     public static InputStream toInputStream(BufferedImage image, String formatName) throws IOException {
         return new ByteArrayInputStream(toByteArray(image, formatName));
+    }
+
+    /**
+     * InputStreamからOutputStreamへ出力
+     *
+     * @param in  入力
+     * @param out 出力
+     * @throws IOException 例外
+     */
+    public static void inputToOutputStream(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = in.read(buffer)) > 0) {
+            out.write(buffer, 0, len);
+        }
     }
 }

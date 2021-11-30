@@ -76,6 +76,25 @@ public class FNStringUtil {
     }
 
     /**
+     * 拡張子を削除
+     *
+     * @param name 名前
+     * @return 拡張子削除済み名
+     */
+    public static String removeExtension(String name) {
+        String[] sps = name.split("\\.");
+        if (sps.length > 1) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < sps.length - 1; i++) {
+                sb.append(sps[i]).append(".");
+            }
+            sb.setLength(sb.length() - 1);
+            return sb.toString();
+        }
+        return name;
+    }
+
+    /**
      * バイト容量表記（単位付き）を取得
      *
      * @param length サイズ
