@@ -2,6 +2,7 @@
 
 ### MG-Git-ignore
 docs.felnull.dev
+.env
 
 ### Example user template
 FNJL2x64.dll
