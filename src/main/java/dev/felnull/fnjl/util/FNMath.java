@@ -1,4 +1,10 @@
 package dev.felnull.fnjl.util;
+
+import dev.felnull.fnjl.math.FNComplex;
+import dev.felnull.fnjl.math.FNVec2i;
+
+import java.util.function.Consumer;
+
 /**
  * Math関係
  *
@@ -136,5 +142,90 @@ public class FNMath {
      */
     public static double clamp(double value, double min, double max) {
         return Math.max(Math.min(value, max), min);
+    }
+
+    /**
+     * マンデルブロ
+     *
+     * @param x   x
+     * @param y   y
+     * @param num 度数
+     * @return is fill
+     */
+    public static boolean mandelbrot(double x, double y, int num) {
+        return mandelbrot(new FNComplex(x, y), num);
+    }
+
+    /**
+     * マンデルブロ
+     *
+     * @param complex 複素数
+     * @param num     度数
+     * @return is fill
+     */
+    public static boolean mandelbrot(FNComplex complex, int num) {
+        return complex.mandelbrot(num) >= num;
+    }
+
+    /**
+     * 白黒マンデルブロ集合を生成
+     *
+     * @param width  横
+     * @param height 縦
+     * @param posX   中心X
+     * @param posY   中心Y
+     * @param zoom   拡大度(1以上)
+     * @param num    度数
+     * @param pos    fill
+     */
+    public static void generateMandelbrotSet(int width, int height, double posX, double posY, double zoom, int num, Consumer<FNVec2i> pos) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                double xp = (-(double) width / 2d + x + posX) / (double) width;
+                double yp = (-(double) height / 2d + y + posY) / (double) height;
+                if (FNMath.mandelbrot(xp * (4 / zoom), yp * (4 / zoom), num)) {
+                    pos.accept(new FNVec2i(x, y));
+                }
+            }
+        }
+    }
+
+    /**
+     * マンデルブロ集合を生成
+     *
+     * @param width  横
+     * @param height 縦
+     * @param posX   中心X
+     * @param posY   中心Y
+     * @param zoom   拡大度(1以上)
+     * @param max    最大値
+     * @param pos    fill
+     */
+    public static void generateColorMandelbrot(int width, int height, double posX, double posY, double zoom, int max, Consumer<PosColorEntry> pos) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                double xp = (-(double) width / 2d + x + posX) / (double) width;
+                double yp = (-(double) height / 2d + y + posY) / (double) height;
+                pos.accept(new PosColorEntry(new FNVec2i(x, y), new FNComplex(xp * (4 / zoom), yp * (4 / zoom)).mandelbrot(max)));
+            }
+        }
+    }
+
+    public static class PosColorEntry {
+        private final FNVec2i pos;
+        private final int color;
+
+        protected PosColorEntry(FNVec2i pos, int color) {
+            this.pos = pos;
+            this.color = color;
+        }
+
+        public FNVec2i getPos() {
+            return pos;
+        }
+
+        public int getColor() {
+            return color;
+        }
     }
 }

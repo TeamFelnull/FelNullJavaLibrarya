@@ -81,7 +81,7 @@ public class FNColorUtil {
     }
 
     /**
-     * 数字カラーコードを文字列の16新数のカラーコードに変換
+     * 数字カラーコードを文字列の16進数のカラーコードに変換
      *
      * @param colorCode カラーコード
      * @return カラーコード文字列
@@ -98,7 +98,7 @@ public class FNColorUtil {
 
     /**
      * 色ごとの距離を取得
-     * 16新数のカラーコード
+     * 16進数のカラーコード
      *
      * @param color1 色1
      * @param color2 色2
@@ -110,7 +110,7 @@ public class FNColorUtil {
 
     /**
      * 近似色を取得する
-     * 16新数のカラーコード
+     * 16進数のカラーコード
      *
      * @param target 対象色
      * @param colors 比較色
@@ -133,7 +133,7 @@ public class FNColorUtil {
 
     /**
      * 近似色のオブジェクトを取得する
-     * 16新数のカラーコード
+     * 16進数のカラーコード
      *
      * @param target      対象色
      * @param colors      比較色オブジェクト
