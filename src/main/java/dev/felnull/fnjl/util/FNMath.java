@@ -1,6 +1,7 @@
 package dev.felnull.fnjl.util;
 
 import dev.felnull.fnjl.math.FNComplex;
+import dev.felnull.fnjl.math.FNVec2d;
 import dev.felnull.fnjl.math.FNVec2i;
 
 import java.util.function.Consumer;
@@ -210,6 +211,15 @@ public class FNMath {
             }
         }
     }
+
+    public static FNVec2d scale(double w, double h) {
+        if (w > h) {
+            return new FNVec2d(1, h / w);
+        } else {
+            return new FNVec2d(w / h, 1);
+        }
+    }
+
 
     public static class PosColorEntry {
         private final FNVec2i pos;

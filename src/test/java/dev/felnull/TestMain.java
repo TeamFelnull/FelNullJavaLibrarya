@@ -1,7 +1,10 @@
 package dev.felnull;
 
+import dev.felnull.fnjl.util.FNMath;
+
 public class TestMain {
     public static void main(String[] args) throws Exception {
+        System.out.println(FNMath.scale(512, 1024));
       /*  long time = System.currentTimeMillis();
         FNRuntimeUtil.multipleRun("Ikisugi", 2, () -> {
             try {
