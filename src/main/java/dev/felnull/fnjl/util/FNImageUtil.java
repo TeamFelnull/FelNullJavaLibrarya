@@ -96,4 +96,43 @@ public class FNImageUtil {
             out.write(buffer, 0, len);
         }
     }
+
+    /**
+     * バイト配列が画像かどうか
+     *
+     * @param data 検体
+     * @return 画像かどうか
+     */
+    public static boolean isImage(byte[] data) {
+        try {
+            ImageIO.read(new ByteArrayInputStream(data));
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * 画像を指定サイズまで縮小する
+     *
+     * @param image 対象画像
+     * @param size  サイズ
+     * @return 縮小済み
+     * @throws IOException exception
+     */
+    public static BufferedImage reductionSize(BufferedImage image, long size) throws IOException {
+        long lastSize = toByteArray(image, "png").length;
+        if (lastSize <= size) return image;
+        float scale = (float) size / lastSize;
+        BufferedImage nimg = resize(image, (int) (image.getWidth() * scale), (int) (image.getHeight() * scale));
+        return reductionSizeW(nimg, size, lastSize);
+    }
+
+    private static BufferedImage reductionSizeW(BufferedImage image, long size, long lastSize) throws IOException {
+        byte[] data = toByteArray(image, "png");
+        if (data.length == lastSize) throw new IOException("Can't be smaller than this");
+        if (data.length <= size) return image;
+        BufferedImage nimg = resize(image, image.getWidth() / 2, image.getHeight() / 2);
+        return reductionSizeW(nimg, size, data.length);
+    }
 }

@@ -1,10 +1,18 @@
 package dev.felnull;
 
-import dev.felnull.fnjl.util.FNMath;
+import dev.felnull.fnjl.util.FNImageUtil;
+import dev.felnull.fnjl.util.FNStringUtil;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class TestMain {
     public static void main(String[] args) throws Exception {
-        System.out.println(FNMath.scale(512, 1024));
+        System.out.println(FNStringUtil.getByteDisplay(1000 * 1000));
+        BufferedImage img = FNImageUtil.reductionSize(ImageIO.read(new File("V:\\dev\\java\\FelNullJavaLibrary\\test\\t.png")), 1000 * 1000);
+        ImageIO.write(img, "png", new File("V:\\dev\\java\\FelNullJavaLibrary\\test\\t2.png"));
+        //System.out.println(FNMath.scale(512, 1024));
       /*  long time = System.currentTimeMillis();
         FNRuntimeUtil.multipleRun("Ikisugi", 2, () -> {
             try {
