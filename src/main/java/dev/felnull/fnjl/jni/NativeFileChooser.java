@@ -33,7 +33,14 @@ public class NativeFileChooser {
         this.filters = filters;
     }
 
+    private static boolean init() {
+        NativeLibraryManager.loadLibrary();
+        return !NativeLibraryManager.isLoadFailure();
+    }
+
     public static boolean isSupport() {
+        if (!init())
+            return false;
         return OSs.isWindows() && OSs.isX64();
     }
 

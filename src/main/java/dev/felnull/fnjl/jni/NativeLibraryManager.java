@@ -106,10 +106,10 @@ public class NativeLibraryManager {
         InputStream stream = loadResource(pp);
 
         if (stream == null && relocatePath != null)
-            stream = loadResource(relocatePath + "/" + libname);
+            stream = loadResource(relocatePath + "/" + pp);
 
         if (stream == null)
-            throw new IOException("Library does not exist");
+            throw new IOException("Library does not exist: " + pp + (relocatePath != null ? (" and " + relocatePath + "/" + pp) : ""));
 
         String name = "FNJL" + FelNullJavaLibrary.getNativeLibVersion() + aarch + "." + os.getLibName();
         Path path = getNativeLibraryFolder().resolve(name);
