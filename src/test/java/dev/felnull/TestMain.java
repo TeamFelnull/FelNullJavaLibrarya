@@ -15,6 +15,7 @@ public class TestMain {
             for (File fil : fils) {
                 System.out.println(fil);
             }
+
         // NativeFileChooser.Flag flags = new NativeFileChooser.Flag().allowMultiSelect(true);
         //   NativeFileChooser.Filter filter = new NativeFileChooser.Filter("TXTファイル", "txt", "iku");
         //   NativeFileChooser.Filter filter2 = new NativeFileChooser.Filter("All file");
