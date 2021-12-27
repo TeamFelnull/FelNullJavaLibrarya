@@ -55,4 +55,22 @@ public class WindowsLibrary {
         return WindowsNative.getSystemFontFaceName(num);
     }
 
+    /**
+     * GetOpenFileNameを開く
+     *
+     * @param hwndId      ウィンドウハンドル
+     * @param title       タイトル
+     * @param initDir     初期ディレクトリ
+     * @param initName    初期選択名
+     * @param defExt      初期拡張子
+     * @param filter      フィルター
+     * @param filterIndex 初期フィルター番号
+     * @param flags       フラグ
+     * @return ファイルパス
+     */
+    public static byte[] getOpenFileName(long hwndId, String title, String initDir, String initName, String defExt, String filter, int filterIndex, int flags) {
+        if (!init())
+            return null;
+        return WindowsNative.getOpenFileName(hwndId, title, initDir, initName, defExt, filter, filterIndex, flags);
+    }
 }
