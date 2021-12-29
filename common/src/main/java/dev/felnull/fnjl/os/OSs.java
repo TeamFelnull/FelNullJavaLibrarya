@@ -104,6 +104,23 @@ public class OSs {
         return "arm".equalsIgnoreCase(getOSArch());
     }
 
+    /**
+     * アーキテクスチャ名を取得
+     *
+     * @return アーキテクスチャ名
+     */
+    public static String getArch() {
+        if (isX64())
+            return "x64";
+        if (isX86())
+            return "x86";
+        if (isArm64())
+            return "arm64";
+        if (isArm32())
+            return "arm32";
+        return "no-support";
+    }
+
     public static enum Type {
         WINDOWS("windows", "dll"), LINUX("linux", "so"), MAC("mac", "jnilib"), OTHER(null, null);
         private final String name;

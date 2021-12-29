@@ -181,4 +181,5 @@ public class FNDataUtil {
     public static byte[] fileLoadToProgress(File file, Consumer<ProgressWriter.WriteProgressListener> progress) throws IOException {
         return loadToProgress(new FileInputStream(file), file.length(), progress);
     }
+
 }
