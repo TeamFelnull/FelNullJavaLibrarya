@@ -1,7 +1,8 @@
-package dev.felnull.fnjl.jni;
+package dev.felnull.fnjln;
 
-import dev.felnull.fnjl.jni.windows.WindowsOpenFileName;
+
 import dev.felnull.fnjl.os.OSs;
+import dev.felnull.fnjln.jni.windows.WindowsOpenFileName;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -11,36 +12,34 @@ import java.nio.file.Path;
  *
  * @since 1.25
  */
-public class NativeFileChooser {
+public class FNNativeFileChooser {
     private String title;
     private String defExt;
-    private Flag flag;
+    private FNNativeFileChooser.Flag flag;
     private Path initialDirectory;
     private String initialName;
-    private Filter[] filters;
+    private FNNativeFileChooser.Filter[] filters;
     private int initialFilterIndex;
 
-    public NativeFileChooser() {
+    public FNNativeFileChooser() {
     }
 
-    public NativeFileChooser(String title) {
+    public FNNativeFileChooser(String title) {
         this.title = title;
     }
 
-    public NativeFileChooser(String title, Flag flags, Filter... filters) {
+    public FNNativeFileChooser(String title, FNNativeFileChooser.Flag flags, FNNativeFileChooser.Filter... filters) {
         this.title = title;
         this.flag = flags;
         this.filters = filters;
     }
 
-    private static boolean init() {
-        NativeLibraryManager.loadLibrary();
-        return !NativeLibraryManager.isLoadFailure();
-    }
-
     public static boolean isSupport() {
-        if (!init())
+        try {
+            FelNullJavaLibraryNative.check();
+        } catch (RuntimeException ex) {
             return false;
+        }
         return OSs.isWindows() && OSs.isX64();
     }
 
@@ -48,7 +47,7 @@ public class NativeFileChooser {
         this.initialDirectory = initialDirectory;
     }
 
-    public void setFilters(Filter[] filters) {
+    public void setFilters(FNNativeFileChooser.Filter[] filters) {
         this.filters = filters;
     }
 
@@ -61,17 +60,17 @@ public class NativeFileChooser {
     }
 
     public File[] openWindow(long hwndId) {
-        if (!isSupport()) return null;
+        FelNullJavaLibraryNative.check();
         if (OSs.isWindows() && OSs.isX64())
             return WindowsOpenFileName.open(this, hwndId);
         return null;
     }
 
-    public Filter[] getFilters() {
+    public FNNativeFileChooser.Filter[] getFilters() {
         return filters;
     }
 
-    public Flag getFlag() {
+    public FNNativeFileChooser.Flag getFlag() {
         return flag;
     }
 
@@ -112,7 +111,7 @@ public class NativeFileChooser {
          * @param allow 許可
          * @return this
          */
-        public Flag allowMultiSelect(boolean allow) {
+        public FNNativeFileChooser.Flag allowMultiSelect(boolean allow) {
             this.multiSelect = allow;
             return this;
         }
@@ -123,7 +122,7 @@ public class NativeFileChooser {
          * @param explorer 表示させない
          * @return this
          */
-        public Flag explorer(boolean explorer) {
+        public FNNativeFileChooser.Flag explorer(boolean explorer) {
             this.explorer = explorer;
             return this;
         }
@@ -134,7 +133,7 @@ public class NativeFileChooser {
          * @param creatEPrompt 表示するかどうか
          * @return this
          */
-        public Flag creatEPrompt(boolean creatEPrompt) {
+        public FNNativeFileChooser.Flag creatEPrompt(boolean creatEPrompt) {
             this.creatEPrompt = creatEPrompt;
             return this;
         }
@@ -145,7 +144,7 @@ public class NativeFileChooser {
          * @param fileMustExist 選択できないかどうか
          * @return this
          */
-        public Flag fileMustExist(boolean fileMustExist) {
+        public FNNativeFileChooser.Flag fileMustExist(boolean fileMustExist) {
             this.fileMustExist = fileMustExist;
             return this;
         }
@@ -156,7 +155,7 @@ public class NativeFileChooser {
          * @param hideReadOnly 隠すかどうか
          * @return this
          */
-        public Flag hideReadOnly(boolean hideReadOnly) {
+        public FNNativeFileChooser.Flag hideReadOnly(boolean hideReadOnly) {
             this.hideReadOnly = hideReadOnly;
             return this;
         }
@@ -167,7 +166,7 @@ public class NativeFileChooser {
          * @param nodeReferenceLinks どうか
          * @return this
          */
-        public Flag nodeReferenceLinks(boolean nodeReferenceLinks) {
+        public FNNativeFileChooser.Flag nodeReferenceLinks(boolean nodeReferenceLinks) {
             this.nodeReferenceLinks = nodeReferenceLinks;
             return this;
         }
@@ -178,7 +177,7 @@ public class NativeFileChooser {
          * @param readOnly 読み取り専用かどうか
          * @return this
          */
-        public Flag readOnly(boolean readOnly) {
+        public FNNativeFileChooser.Flag readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }

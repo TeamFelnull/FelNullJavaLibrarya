@@ -63,4 +63,12 @@ public class FNVec2d {
                 ", y=" + y +
                 '}';
     }
+
+    public FNVec2f convertFloat() {
+        return new FNVec2f((float) x, (float) y);
+    }
+
+    public FNVec2i convertInt() {
+        return new FNVec2i((int) x, (int) y);
+    }
 }

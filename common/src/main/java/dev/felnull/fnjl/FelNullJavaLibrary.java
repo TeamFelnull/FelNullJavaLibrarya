@@ -15,14 +15,4 @@ public class FelNullJavaLibrary {
     public static String getVersion() {
         return FNJLBuildIn.VERSION;
     }
-
-    /**
-     * ネイティブライブラリのバージョン
-     *
-     * @return バージョン
-     */
-    public static int getNativeLibVersion() {
-        return FNJLBuildIn.NATIVE_LIB_VERSION;
-    }
-
 }

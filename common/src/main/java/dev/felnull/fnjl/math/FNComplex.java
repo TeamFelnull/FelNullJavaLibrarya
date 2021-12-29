@@ -104,4 +104,8 @@ public class FNComplex {
                 ", imag=" + imag +
                 '}';
     }
+
+    public FNVec2d convertVec2d() {
+        return new FNVec2d(real, imag);
+    }
 }

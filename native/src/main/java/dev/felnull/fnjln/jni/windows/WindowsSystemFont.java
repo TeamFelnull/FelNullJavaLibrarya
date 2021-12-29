@@ -1,10 +1,10 @@
-package dev.felnull.fnjl.jni.windows;
+package dev.felnull.fnjln.jni.windows;
 
 /**
  * Windowsシステムフォント
  *
  * @author MORIMORI0317
- * @since 1.13
+ * @since 1.32
  */
 public enum WindowsSystemFont {
     IconTitleLogFont(0),
@@ -27,5 +27,4 @@ public enum WindowsSystemFont {
     public String getFaceName() {
         return WindowsLibrary.getSystemFontFaceName(num);
     }
-
 }

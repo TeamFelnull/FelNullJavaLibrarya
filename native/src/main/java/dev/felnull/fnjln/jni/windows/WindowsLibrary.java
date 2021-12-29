@@ -1,7 +1,6 @@
-package dev.felnull.fnjl.jni.windows;
+package dev.felnull.fnjln.jni.windows;
 
-import dev.felnull.fnjl.jni.NativeLibraryManager;
-import dev.felnull.fnjl.os.OSs;
+import dev.felnull.fnjln.FelNullJavaLibraryNative;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,17 +9,9 @@ import java.nio.file.Paths;
  * WindowsのJNIを利用したネイティブ関連
  *
  * @author MORIMORI0317
- * @since 1.10
+ * @since 1.32
  */
 public class WindowsLibrary {
-
-    private static boolean init() {
-        if (OSs.isWindows() && OSs.isX64()) {
-            NativeLibraryManager.loadLibrary();
-            return !NativeLibraryManager.isLoadFailure();
-        }
-        return false;
-    }
 
     /**
      * 特殊パス取得
@@ -29,16 +20,12 @@ public class WindowsLibrary {
      * @return パス
      */
     public static Path getSpecialFolderPath(int num) {
-        if (!init())
-            return null;
-        try {
-            return Paths.get(WindowsNative.getSpecialFolderPath(num));
-        } catch (Exception ex) {
-            return null;
-        }
+        FelNullJavaLibraryNative.check();
+        return Paths.get(WindowsNative.getSpecialFolderPath(num));
     }
 
     /**
+     * OSシステムフォント取得
      * 0 - IconTitleLogFont
      * 1 - MessageFont
      * 2 - CaptionFont
@@ -50,8 +37,7 @@ public class WindowsLibrary {
      * @return フォント名
      */
     public static String getSystemFontFaceName(int num) {
-        if (!init())
-            return null;
+        FelNullJavaLibraryNative.check();
         return WindowsNative.getSystemFontFaceName(num);
     }
 
@@ -69,8 +55,7 @@ public class WindowsLibrary {
      * @return ファイルパス
      */
     public static byte[] getOpenFileName(long hwndId, String title, String initDir, String initName, String defExt, String filter, int filterIndex, int flags) {
-        if (!init())
-            return null;
+        FelNullJavaLibraryNative.check();
         return WindowsNative.getOpenFileName(hwndId, title, initDir, initName, defExt, filter, filterIndex, flags);
     }
 }

@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class FNRuntimeUtil {
     private static final Map<Runnable, Long> lastTimes = new HashMap<>();
+    private static final List<Timer> timers = new ArrayList<>();
 
     public static void oneDayClockTimer(int hours, int minutes, Runnable runnable) {
         oneDayClockTimer(hours, minutes, runnable, false);
@@ -30,6 +31,7 @@ public class FNRuntimeUtil {
             }
         };
         timer.schedule(task, 0, 1000);
+        timers.add(timer);
     }
 
     /**
@@ -128,6 +130,18 @@ public class FNRuntimeUtil {
                 fin.set(0);
             } while (!runners.isEmpty());
         });
+    }
+
+    /**
+     * このクラスで登録したタスクをすべて停止
+     */
+    public static void kill() {
+        for (Timer timer : timers) {
+            timer.cancel();
+            timer.purge();
+        }
+        timers.clear();
+        lastTimes.clear();
     }
 
 }

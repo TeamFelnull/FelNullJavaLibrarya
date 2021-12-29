@@ -25,7 +25,10 @@ public class FelNullJavaLibraryNative {
      * Nativeライブラリを利用する前に最初に一度呼び出してください。
      */
     public synchronized static void init() {
-        init(Paths.get("."));
+        String tempDir = System.getProperty("java.io.tmpdir");
+        Path path = Paths.get(tempDir).resolve("fnjl_natives");
+        path.toFile().mkdirs();
+        init(path);
     }
 
     /**
@@ -45,10 +48,14 @@ public class FelNullJavaLibraryNative {
      */
     public synchronized static void init(String libraryLocation, Path libraryPath) {
         if (init) return;
+        if (libraryPath == null) {
+            init = true;
+            return;
+        }
         OSs.Type os = OSs.getOS();
         String arch = OSs.getArch();
-        String libName = String.format("FNJLNative%s.%s", arch, os.getLibName());
-        String outLibName = String.format("FNJLNative%s%s.%s", getNativeLibraryVersion(), arch, os.getLibName());
+        String libName = String.format("FNJLNative_%s.%s", arch, os.getLibName());
+        String outLibName = String.format("FNJLNative_%s%s.%s", getNativeLibraryVersion(), arch, os.getLibName());
         File outLibFIle = libraryPath.resolve(outLibName).toFile();
 
         if (outLibFIle.exists() && loadLibrary(outLibFIle)) {
@@ -77,6 +84,7 @@ public class FelNullJavaLibraryNative {
             System.loadLibrary(file.getAbsolutePath());
             return true;
         } catch (UnsatisfiedLinkError er) {
+            er.printStackTrace();
             return false;
         }
     }
@@ -133,4 +141,13 @@ public class FelNullJavaLibraryNative {
     public static int getNativeLibraryVersion() {
         return FNJLNBuildIn.NATIVE_LIBRARY_VERSION;
     }
+
+
+    public static void check() {
+        if (!isInitialized())
+            throw new RuntimeException("Library not initialized");
+        if (!isLoaded())
+            throw new RuntimeException("Library not loaded");
+    }
+
 }

@@ -63,4 +63,12 @@ public class FNVec2i {
                 ", y=" + y +
                 '}';
     }
+
+    public FNVec2f convertFloat() {
+        return new FNVec2f(x, y);
+    }
+
+    public FNVec2d convertDouble() {
+        return new FNVec2d(x, y);
+    }
 }

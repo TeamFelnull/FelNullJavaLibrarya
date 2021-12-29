@@ -1,4 +1,4 @@
-package dev.felnull.fnjl.jni.windows;
+package dev.felnull.fnjln.jni.windows;
 
 import java.nio.file.Path;
 
@@ -6,7 +6,7 @@ import java.nio.file.Path;
  * Windowsの特殊パスを取得
  *
  * @author MORIMORI0317
- * @since 1.10
+ * @since 1.32
  */
 public enum WindowsSpecialFolder {
     DESKTOP(0x0000),

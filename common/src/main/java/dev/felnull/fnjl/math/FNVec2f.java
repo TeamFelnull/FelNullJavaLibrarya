@@ -63,4 +63,12 @@ public class FNVec2f {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+    public FNVec2d convertDouble() {
+        return new FNVec2d(x, y);
+    }
+
+    public FNVec2i convertInt() {
+        return new FNVec2i((int) x, (int) y);
+    }
 }

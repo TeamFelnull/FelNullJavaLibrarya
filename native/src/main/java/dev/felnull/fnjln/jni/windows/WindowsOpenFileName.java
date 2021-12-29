@@ -1,13 +1,19 @@
-package dev.felnull.fnjl.jni.windows;
+package dev.felnull.fnjln.jni.windows;
 
-import dev.felnull.fnjl.jni.NativeFileChooser;
+import dev.felnull.fnjln.FNNativeFileChooser;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Windowsのファイルを開くを開く
+ *
+ * @author MORIMORI0317
+ * @since 1.32
+ */
 public class WindowsOpenFileName {
-    public static File[] open(NativeFileChooser fc, long hwnd) {
+    public static File[] open(FNNativeFileChooser fc, long hwnd) {
         String title = fc.getTitle() == null ? "" : fc.getTitle();
         String initDir = fc.getInitialDirectory() == null ? "" : fc.getInitialDirectory().toAbsolutePath().toString();
         String initName = fc.getInitialName() == null ? "" : fc.getInitialName();
@@ -37,16 +43,16 @@ public class WindowsOpenFileName {
         return "\0";
     }
 
-    private static String createFilterString(NativeFileChooser.Filter[] filters) {
+    private static String createFilterString(FNNativeFileChooser.Filter[] filters) {
         if (filters == null) return "";
         StringBuilder sb = new StringBuilder();
-        for (NativeFileChooser.Filter filter : filters) {
+        for (FNNativeFileChooser.Filter filter : filters) {
             sb.append(filter.toWindowsFilterText());
         }
         return sb.toString();
     }
 
-    private static int createFlagNum(NativeFileChooser.Flag flags) {
+    private static int createFlagNum(FNNativeFileChooser.Flag flags) {
         if (flags == null) return 0;
         int num = 0;
         if (flags.isCreatEPrompt())
