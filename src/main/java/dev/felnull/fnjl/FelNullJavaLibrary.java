@@ -13,7 +13,7 @@ public class FelNullJavaLibrary {
      * @return FelNullJavaLibraryのバージョン
      */
     public static String getVersion() {
-        return BuildIn.VERSION;
+        return FNJLBuildIn.VERSION;
     }
 
     /**
@@ -22,7 +22,7 @@ public class FelNullJavaLibrary {
      * @return バージョン
      */
     public static int getNativeLibVersion() {
-        return BuildIn.NATIVE_LIB_VERSION;
+        return FNJLBuildIn.NATIVE_LIB_VERSION;
     }
 
 }

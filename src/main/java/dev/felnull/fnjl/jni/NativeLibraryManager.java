@@ -21,7 +21,6 @@ public class NativeLibraryManager {
     private static boolean inited;
     private static boolean load;
     private static Path libraryFolder;
-    private static String relocatePath;
 
     /**
      * JNIライブラリを読み込む
@@ -38,15 +37,6 @@ public class NativeLibraryManager {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    /**
-     * ShadowJarなどでNativeライブラリの場所を変更してる場合に指定
-     *
-     * @param relocatePath 移動パス
-     */
-    public static void setRelocatePath(String relocatePath) {
-        NativeLibraryManager.relocatePath = relocatePath;
     }
 
     /**
@@ -101,15 +91,17 @@ public class NativeLibraryManager {
 
     private static void extractLibrary(OSs.Type os, String aarch) throws IOException {
         String libname = "FNJL" + aarch + "." + os.getLibName();
-        String pp = FelNullJavaLibrary.class.getPackage().getName().replace(".", "/") + "/natives/" + libname;
-
+  /*      String cn = FelNullJavaLibrary.class.getSimpleName();
+        String pn = FelNullJavaLibrary.class.getName();
+        String ppa = pn.substring(0, pn.length() - cn.length() - 1).replace(".", "/");
+        String pp = ppa + "/natives/" + libname;
+        */
+        String pp = "dev/felnull/fnjl/natives/" + libname;
+        //dev/felnull/imp/libs/dev/felnull/fnjl/dev/felnull/imp/libs/natives/FNJLx64.dll:
         InputStream stream = loadResource(pp);
 
-        if (stream == null && relocatePath != null)
-            stream = loadResource(relocatePath + "/" + pp);
-
         if (stream == null)
-            throw new IOException("Library does not exist: " + pp + (relocatePath != null ? (" and " + relocatePath + "/" + pp) : ""));
+            throw new IOException("Library does not exist: " + pp);
 
         String name = "FNJL" + FelNullJavaLibrary.getNativeLibVersion() + aarch + "." + os.getLibName();
         Path path = getNativeLibraryFolder().resolve(name);
