@@ -24,8 +24,8 @@ jobs:
           signingkey: ${{secrets.SIGNING_KEY}}
           signingkeyid: ${{secrets.SIGNING_KEYID}}
           signingpassword: ${{secrets.SIGNING_PASSWORD}}
-          sonatypepassword: ${{secrets.SONATYPE_PASSWORD}}
-          sonatypeusername: ${{secrets.SONATYPE_USERNAME}}
+          sonatypePassword: ${{secrets.SONATYPE_PASSWORD}}
+          sonatypeUsername: ${{secrets.SONATYPE_USERNAME}}
       - name: Zip create
         run: |
           cd build/libs
