@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'maven-publish'
-    id 'signing'
+    //id 'maven-publish'
+  //  id 'signing'
 }
 group rootProject.group
 archivesBaseName = rootProject.archivesBaseName + "-native"
@@ -25,7 +25,7 @@ java {
     withJavadocJar()
     withSourcesJar()
 }
-
+/*
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -86,3 +86,4 @@ javadoc {
 }
 
 
+*/
