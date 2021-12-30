@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    //id 'maven-publish'
-  //  id 'signing'
+    id 'maven-publish'
+    id 'signing'
 }
 group rootProject.group
 archivesBaseName = rootProject.archivesBaseName + "-native"
@@ -25,7 +25,7 @@ java {
     withJavadocJar()
     withSourcesJar()
 }
-/*
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -33,7 +33,7 @@ publishing {
             from components.java
             pom {
                 name = 'FelNullJavaLibrary-Native'
-                description = 'Java integrated library(Native onery) used by FelNull'
+                description = 'Java integrated library(native onry) used by FelNull'
                 url = 'https://github.com/TeamFelnull/'
                 licenses {
                     license {
@@ -66,8 +66,8 @@ publishing {
             def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
-                username = "${sonatypeUsername}"
-                password = "${sonatypePassword}"
+                username = System.getenv('sonatypeusername')
+                password = System.getenv('sonatypepassword')
             }
         }
     }
@@ -75,6 +75,10 @@ publishing {
 
 signing {
     sign publishing.publications.mavenJava
+    def signingKeyId = System.getenv('signingkeyid')
+    def signingKey = System.getenv('signingkey')
+    def signingPassword = System.getenv('signingpassword')
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
 }
 
 javadoc {
@@ -84,6 +88,3 @@ javadoc {
     options.charSet = 'UTF-8'
     options.encoding = 'UTF-8'
 }
-
-
-*/
