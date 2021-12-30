@@ -64,7 +64,7 @@ public class FelNullJavaLibraryNative {
             return;
         }
 
-        InputStream stream = loadResource(libraryLocation + libName);
+        InputStream stream = FNDataUtil.resourceExtractor(FelNullJavaLibraryNative.class, libraryLocation + libName);
         if (stream != null) {
             stream = new BufferedInputStream(stream);
             try {
@@ -89,12 +89,6 @@ public class FelNullJavaLibraryNative {
         }
     }
 
-    private static InputStream loadResource(String path) {
-        InputStream stream = FelNullJavaLibraryNative.class.getResourceAsStream("/" + path);
-        if (stream == null)
-            stream = ClassLoader.getSystemResourceAsStream(path);
-        return stream;
-    }
 
     /**
      * 初期化済みかどうか

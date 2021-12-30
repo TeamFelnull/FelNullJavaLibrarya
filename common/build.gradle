@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+    id 'signing'
 }
 group rootProject.group
 archivesBaseName = rootProject.archivesBaseName
@@ -11,5 +13,79 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
-
 }
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = archivesBaseName
+            from components.java
+            pom {
+                name = 'FelNullJavaLibrary'
+                description = 'Java integrated library used by FelNull'
+                url = 'https://github.com/TeamFelnull/'
+                licenses {
+                    license {
+                        name = 'GNU Lesser General Public License v3.0'
+                        url = 'https://www.gnu.org/licenses/lgpl-3.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'FelNull'
+                        name = 'TeamFelNull'
+                        email = 'teamfelnull@m.servg.red'
+                    }
+                    developer {
+                        id = 'MORIMORI0317'
+                        name = 'MORIMORI0317'
+                    }
+                }
+                scm {
+                    connection = 'git@github.com:TeamFelnull/FelNullJavaLibrary.git'
+                    developerConnection = 'git@github.com:TeamFelnull/FelNullJavaLibrary.git'
+                    url = 'https://github.com/TeamFelnull/FelNullJavaLibrary'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = System.getenv('sonatypeusername')
+                password = System.getenv('sonatypepassword')
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+    def signingKeyId = System.getenv('signingkeyid')
+    def signingKey = System.getenv('signingkey')
+    def signingPassword = System.getenv('signingpassword')
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+    options.charSet = 'UTF-8'
+    options.encoding = 'UTF-8'
+}
+
+
+

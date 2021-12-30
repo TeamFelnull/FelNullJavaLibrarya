@@ -182,4 +182,17 @@ public class FNDataUtil {
         return loadToProgress(new FileInputStream(file), file.length(), progress);
     }
 
+    /**
+     * リソースフォルダからデータを抽出
+     *
+     * @param targetClass リソースフォルダのクラス
+     * @param path        リソースパス
+     * @return InputStream
+     */
+    public static InputStream resourceExtractor(Class<?> targetClass, String path) {
+        InputStream stream = targetClass.getResourceAsStream("/" + path);
+        if (stream == null)
+            stream = ClassLoader.getSystemResourceAsStream(path);
+        return stream != null ? new BufferedInputStream(stream) : null;
+    }
 }
