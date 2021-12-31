@@ -81,7 +81,7 @@ public class FelNullJavaLibraryNative {
 
     private static boolean loadLibrary(File file) {
         try {
-            System.loadLibrary(file.getAbsolutePath());
+            System.load(file.getAbsolutePath());
             return true;
         } catch (UnsatisfiedLinkError er) {
             er.printStackTrace();
