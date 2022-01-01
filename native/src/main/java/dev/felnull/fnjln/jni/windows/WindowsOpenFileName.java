@@ -30,7 +30,8 @@ public class WindowsOpenFileName {
         Path dir = Paths.get(files[0]);
         File[] Ffiles = new File[files.length - 1];
         for (int i = 0; i < Ffiles.length; i++) {
-            Ffiles[i] = dir.resolve(files[1 + i]).toFile();
+            if (!files[1 + i].contains("\0"))
+                Ffiles[i] = dir.resolve(files[1 + i]).toFile();
         }
         return Ffiles;
     }
