@@ -3,6 +3,7 @@ package dev.felnull.fnjl.util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.UUID;
 
 /**
  * 文字列関係
@@ -202,5 +203,15 @@ public class FNStringUtil {
      */
     public static String getPercentage(float par) {
         return (int) (par * 100) + "%";
+    }
+
+    /**
+     * ハイフン無しUUID文字列からUUIDを生成
+     *
+     * @param uuidStr ハイフン無しUUID文字列
+     * @return UUID
+     */
+    public static UUID fromNoHyphenStringToUUID(String uuidStr) {
+        return UUID.fromString(uuidStr.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5"));
     }
 }
