@@ -214,4 +214,41 @@ public class FNStringUtil {
     public static UUID fromNoHyphenStringToUUID(String uuidStr) {
         return UUID.fromString(uuidStr.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5"));
     }
+
+    /**
+     * 時間をhh:mm:ss/hh:mm:ssのような進捗度で出力する
+     *
+     * @param compTime  経過時間
+     * @param totalTime 合計時間
+     * @return フォーマット済み文字列
+     */
+    public static String getTimeProgress(long compTime, long totalTime) {
+        return getTimeFormat(compTime, totalTime >= 3600000) + "/" + getTimeFormat(totalTime);
+    }
+
+    /**
+     * 時間をhh:mm:ssのように出力する
+     *
+     * @param time 時間
+     * @return フォーマット済み文字列
+     */
+    public static String getTimeFormat(long time) {
+        return getTimeFormat(time, false);
+    }
+
+    /**
+     * 時間をhh:mm:ssのように出力する
+     *
+     * @param time 時間
+     * @param hour 時の表示を強制するか
+     * @return フォーマット済み文字列
+     */
+    public static String getTimeFormat(long time, boolean hour) {
+        long hourTime = time / 3600000;
+        long minTime = (time - hourTime * 3600000) / 60000;
+        long secTime = (time - hourTime * 3600000 - minTime * 60000) / 1000;
+        if (hourTime > 0 || hour)
+            return String.format("%02d:%02d:%02d", hourTime, minTime, secTime);
+        return String.format("%02d:%02d", minTime, secTime);
+    }
 }
