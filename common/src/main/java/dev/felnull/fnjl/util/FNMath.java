@@ -2,17 +2,23 @@ package dev.felnull.fnjl.util;
 
 import dev.felnull.fnjl.math.FNComplex;
 import dev.felnull.fnjl.math.FNVec2d;
+import dev.felnull.fnjl.math.FNVec2f;
 import dev.felnull.fnjl.math.FNVec2i;
+import dev.felnull.fnjl.tuple.FNPair;
+import dev.felnull.fnjl.tuple.SimpleFNPair;
 
 import java.util.function.Consumer;
 
 /**
- * Math関係
+ * 計算関係
  *
  * @author MORIMORI0317
  * @since 1.0
  */
 public class FNMath {
+    /**
+     * 絶対零度
+     */
     public static final double ABSOLUTE_ZERO_TEMP = -273.15f;
 
     /**
@@ -212,6 +218,13 @@ public class FNMath {
         }
     }
 
+    /**
+     * 幅と高さのスケールを取得
+     *
+     * @param w 幅
+     * @param h 高さ
+     * @return スケール
+     */
     public static FNVec2d scale(double w, double h) {
         if (w > h) {
             return new FNVec2d(1, h / w);
@@ -220,6 +233,151 @@ public class FNMath {
         }
     }
 
+    /**
+     * 値の中で最も小さい値を出力
+     *
+     * @param value  値
+     * @param values 値配列
+     * @return 最も小さい値
+     */
+    public static int min(int value, int... values) {
+        int min = value;
+        for (int i : values) {
+            if (min > i)
+                min = i;
+        }
+        return min;
+    }
+
+    /**
+     * 値の中で最も小さい値を出力
+     *
+     * @param value  値
+     * @param values 値配列
+     * @return 最も小さい値
+     */
+    public static float min(float value, float... values) {
+        float min = value;
+        for (float i : values) {
+            if (min > i)
+                min = i;
+        }
+        return min;
+    }
+
+    /**
+     * 値の中で最も小さい値を出力
+     *
+     * @param value  値
+     * @param values 値配列
+     * @return 最も小さい値
+     */
+    public static double min(double value, double... values) {
+        double min = value;
+        for (double i : values) {
+            if (min > i)
+                min = i;
+        }
+        return min;
+    }
+
+    /**
+     * 値の中で最も小さい値を出力
+     *
+     * @param value  値
+     * @param values 値配列
+     * @return 最も小さい値
+     */
+    public static long min(long value, long... values) {
+        long min = value;
+        for (long i : values) {
+            if (min > i)
+                min = i;
+        }
+        return min;
+    }
+
+    /**
+     * 値の中で最も大きい値を出力
+     *
+     * @param value  値
+     * @param values 値配列
+     * @return 最も大きい値
+     */
+    public static int max(int value, int... values) {
+        int max = value;
+        for (int i : values) {
+            if (max < i)
+                max = i;
+        }
+        return max;
+    }
+
+    /**
+     * 値の中で最も大きい値を出力
+     *
+     * @param value  値
+     * @param values 値配列
+     * @return 最も大きい値
+     */
+    public static float max(float value, float... values) {
+        float max = value;
+        for (float i : values) {
+            if (max < i)
+                max = i;
+        }
+        return max;
+    }
+
+    /**
+     * 値の中で最も大きい値を出力
+     *
+     * @param value  値
+     * @param values 値配列
+     * @return 最も大きい値
+     */
+    public static double max(double value, double... values) {
+        double max = value;
+        for (double i : values) {
+            if (max < i)
+                max = i;
+        }
+        return max;
+    }
+
+    /**
+     * 値の中で最も大きい値を出力
+     *
+     * @param value  値
+     * @param values 値配列
+     * @return 最も大きい値
+     */
+    public static long max(long value, long... values) {
+        long max = value;
+        for (long i : values) {
+            if (max < i)
+                max = i;
+        }
+        return max;
+    }
+
+    /**
+     * ４点の平面から2点の平面の座標へ変換
+     *
+     * @param v1 座標1
+     * @param v2 座標2
+     * @param v3 座標3
+     * @param v4 座標4
+     * @return 開始座標と終了座標のペア
+     */
+    public static FNPair<FNVec2f, FNVec2f> trans4to2CornerPlanes(FNVec2f v1, FNVec2f v2, FNVec2f v3, FNVec2f v4) {
+        float stX = min(v1.getX(), v2.getX(), v3.getX(), v4.getX());
+        float stY = min(v1.getY(), v2.getY(), v3.getY(), v4.getY());
+
+        float enX = max(v1.getX(), v2.getX(), v3.getX(), v4.getX());
+        float enY = max(v1.getY(), v2.getY(), v3.getY(), v4.getY());
+        return new SimpleFNPair<>(new FNVec2f(stX, stY), new FNVec2f(enX, enY));
+    }
 
     public static class PosColorEntry {
         private final FNVec2i pos;
