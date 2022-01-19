@@ -102,11 +102,22 @@ public class FNStringUtil {
      * @return 容量表記
      */
     public static String getByteDisplay(long length) {
+        return getByteDisplay(length, 1000);
+    }
+
+    /**
+     * バイト容量表記（単位付き）を取得
+     *
+     * @param length サイズ
+     * @param kbCont 1KB何Byteか
+     * @return 容量表記
+     */
+    public static String getByteDisplay(long length, long kbCont) {
         int keta = (int) Math.floor(Math.log10(length));
         if (keta <= 2)
             return String.format("%sByte", length);
         int kets = keta - 2;
-        float val = (float) ((float) length / Math.pow(1000, 1 + (int) Math.floor(((float) kets / 3))));
+        float val = (float) ((float) length / Math.pow(kbCont, 1 + (int) Math.floor(((float) kets / 3))));
         return String.format("%s%sB", val, unit[(int) Math.floor(((float) kets / 3f))]);
     }
 
