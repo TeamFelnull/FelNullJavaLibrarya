@@ -4,7 +4,7 @@ plugins {
     id 'signing'
 }
 group rootProject.group
-archivesBaseName = rootProject.archivesBaseName + "-native"
+archivesBaseName = rootProject.archivesBaseName + "-natives"
 version rootProject.version
 
 repositories {
@@ -32,7 +32,7 @@ publishing {
             artifactId = archivesBaseName
             from components.java
             pom {
-                name = 'FelNullJavaLibrary-Native'
+                name = 'FelNullJavaLibrary-Natives'
                 description = 'Java integrated library(native onry) used by FelNull'
                 url = 'https://github.com/TeamFelnull/'
                 licenses {

@@ -9,10 +9,10 @@ import dev.felnull.fnjln.jni.windows.WindowsSystemFont;
  * @author MORIMORI0317
  * @since 1.32
  */
-public class FNNativeFont {
+public class FNNativesFont {
     public static boolean isSupport() {
         try {
-            FelNullJavaLibraryNative.check();
+            FelNullJavaLibraryNatives.check();
         } catch (RuntimeException ex) {
             return false;
         }
@@ -25,7 +25,7 @@ public class FNNativeFont {
      * @return フォント名
      */
     public static String getSystemFontName() {
-        FelNullJavaLibraryNative.check();
+        FelNullJavaLibraryNatives.check();
         return WindowsSystemFont.IconTitleLogFont.getFaceName();
     }
 }

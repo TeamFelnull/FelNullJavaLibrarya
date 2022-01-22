@@ -1,6 +1,6 @@
 package dev.felnull.fnjln.jni.windows;
 
-import dev.felnull.fnjln.FelNullJavaLibraryNative;
+import dev.felnull.fnjln.FelNullJavaLibraryNatives;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +20,7 @@ public class WindowsLibrary {
      * @return パス
      */
     public static Path getSpecialFolderPath(int num) {
-        FelNullJavaLibraryNative.check();
+        FelNullJavaLibraryNatives.check();
         return Paths.get(WindowsNative.getSpecialFolderPath(num));
     }
 
@@ -37,7 +37,7 @@ public class WindowsLibrary {
      * @return フォント名
      */
     public static String getSystemFontFaceName(int num) {
-        FelNullJavaLibraryNative.check();
+        FelNullJavaLibraryNatives.check();
         return WindowsNative.getSystemFontFaceName(num);
     }
 
@@ -55,7 +55,7 @@ public class WindowsLibrary {
      * @return ファイルパス
      */
     public static byte[] getOpenFileName(long hwndId, String title, String initDir, String initName, String defExt, String filter, int filterIndex, int flags) {
-        FelNullJavaLibraryNative.check();
+        FelNullJavaLibraryNatives.check();
         return WindowsNative.getOpenFileName(hwndId, title, initDir, initName, defExt, filter, filterIndex, flags);
     }
 }

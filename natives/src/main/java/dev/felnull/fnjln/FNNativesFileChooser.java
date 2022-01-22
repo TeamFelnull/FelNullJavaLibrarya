@@ -12,23 +12,23 @@ import java.nio.file.Path;
  *
  * @since 1.25
  */
-public class FNNativeFileChooser {
+public class FNNativesFileChooser {
     private String title;
     private String defExt;
-    private FNNativeFileChooser.Flag flag;
+    private FNNativesFileChooser.Flag flag;
     private Path initialDirectory;
     private String initialName;
-    private FNNativeFileChooser.Filter[] filters;
+    private FNNativesFileChooser.Filter[] filters;
     private int initialFilterIndex;
 
-    public FNNativeFileChooser() {
+    public FNNativesFileChooser() {
     }
 
-    public FNNativeFileChooser(String title) {
+    public FNNativesFileChooser(String title) {
         this.title = title;
     }
 
-    public FNNativeFileChooser(String title, FNNativeFileChooser.Flag flags, FNNativeFileChooser.Filter... filters) {
+    public FNNativesFileChooser(String title, FNNativesFileChooser.Flag flags, FNNativesFileChooser.Filter... filters) {
         this.title = title;
         this.flag = flags;
         this.filters = filters;
@@ -36,7 +36,7 @@ public class FNNativeFileChooser {
 
     public static boolean isSupport() {
         try {
-            FelNullJavaLibraryNative.check();
+            FelNullJavaLibraryNatives.check();
         } catch (RuntimeException ex) {
             return false;
         }
@@ -47,7 +47,7 @@ public class FNNativeFileChooser {
         this.initialDirectory = initialDirectory;
     }
 
-    public void setFilters(FNNativeFileChooser.Filter[] filters) {
+    public void setFilters(FNNativesFileChooser.Filter[] filters) {
         this.filters = filters;
     }
 
@@ -60,17 +60,17 @@ public class FNNativeFileChooser {
     }
 
     public File[] openWindow(long hwndId) {
-        FelNullJavaLibraryNative.check();
+        FelNullJavaLibraryNatives.check();
         if (OSs.isWindows() && OSs.isX64())
             return WindowsOpenFileName.open(this, hwndId);
         return null;
     }
 
-    public FNNativeFileChooser.Filter[] getFilters() {
+    public FNNativesFileChooser.Filter[] getFilters() {
         return filters;
     }
 
-    public FNNativeFileChooser.Flag getFlag() {
+    public FNNativesFileChooser.Flag getFlag() {
         return flag;
     }
 
@@ -111,7 +111,7 @@ public class FNNativeFileChooser {
          * @param allow 許可
          * @return this
          */
-        public FNNativeFileChooser.Flag allowMultiSelect(boolean allow) {
+        public FNNativesFileChooser.Flag allowMultiSelect(boolean allow) {
             this.multiSelect = allow;
             return this;
         }
@@ -122,7 +122,7 @@ public class FNNativeFileChooser {
          * @param explorer 表示させない
          * @return this
          */
-        public FNNativeFileChooser.Flag explorer(boolean explorer) {
+        public FNNativesFileChooser.Flag explorer(boolean explorer) {
             this.explorer = explorer;
             return this;
         }
@@ -133,7 +133,7 @@ public class FNNativeFileChooser {
          * @param creatEPrompt 表示するかどうか
          * @return this
          */
-        public FNNativeFileChooser.Flag creatEPrompt(boolean creatEPrompt) {
+        public FNNativesFileChooser.Flag creatEPrompt(boolean creatEPrompt) {
             this.creatEPrompt = creatEPrompt;
             return this;
         }
@@ -144,7 +144,7 @@ public class FNNativeFileChooser {
          * @param fileMustExist 選択できないかどうか
          * @return this
          */
-        public FNNativeFileChooser.Flag fileMustExist(boolean fileMustExist) {
+        public FNNativesFileChooser.Flag fileMustExist(boolean fileMustExist) {
             this.fileMustExist = fileMustExist;
             return this;
         }
@@ -155,7 +155,7 @@ public class FNNativeFileChooser {
          * @param hideReadOnly 隠すかどうか
          * @return this
          */
-        public FNNativeFileChooser.Flag hideReadOnly(boolean hideReadOnly) {
+        public FNNativesFileChooser.Flag hideReadOnly(boolean hideReadOnly) {
             this.hideReadOnly = hideReadOnly;
             return this;
         }
@@ -166,7 +166,7 @@ public class FNNativeFileChooser {
          * @param nodeReferenceLinks どうか
          * @return this
          */
-        public FNNativeFileChooser.Flag nodeReferenceLinks(boolean nodeReferenceLinks) {
+        public FNNativesFileChooser.Flag nodeReferenceLinks(boolean nodeReferenceLinks) {
             this.nodeReferenceLinks = nodeReferenceLinks;
             return this;
         }
@@ -177,7 +177,7 @@ public class FNNativeFileChooser {
          * @param readOnly 読み取り専用かどうか
          * @return this
          */
-        public FNNativeFileChooser.Flag readOnly(boolean readOnly) {
+        public FNNativesFileChooser.Flag readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }

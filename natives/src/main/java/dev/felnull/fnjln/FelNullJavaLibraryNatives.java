@@ -17,7 +17,7 @@ import java.nio.file.Paths;
  * @author MORIMORI0317
  * @since 1.32
  */
-public class FelNullJavaLibraryNative {
+public class FelNullJavaLibraryNatives {
     private static boolean init;
     private static boolean loaded;
 
@@ -64,7 +64,7 @@ public class FelNullJavaLibraryNative {
             return;
         }
 
-        InputStream stream = FNDataUtil.resourceExtractor(FelNullJavaLibraryNative.class, libraryLocation + libName);
+        InputStream stream = FNDataUtil.resourceExtractor(FelNullJavaLibraryNatives.class, libraryLocation + libName);
         if (stream != null) {
             stream = new BufferedInputStream(stream);
             try {

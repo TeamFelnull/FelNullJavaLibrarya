@@ -11,10 +11,10 @@ import java.nio.file.Path;
  * @author MORIMORI0317
  * @since 1.32
  */
-public class FNNativeSpecialFolder {
+public class FNNativesSpecialFolder {
     public static boolean isSupport() {
         try {
-            FelNullJavaLibraryNative.check();
+            FelNullJavaLibraryNatives.check();
         } catch (RuntimeException ex) {
             return false;
         }
