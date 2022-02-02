@@ -1,11 +1,9 @@
 package dev.felnull.fnjl.util;
 
 import dev.felnull.fnjl.FelNullJavaLibrary;
+import dev.felnull.fnjl.tuple.FNPair;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -113,4 +111,70 @@ public class FNURLUtil {
             stringConsumer.accept(str);
         });
     }
+
+    /**
+     * POSTでテキストを送り返ってきた文字列とステータスコードを取得
+     *
+     * @param url              URL
+     * @param body             テキスト
+     * @param language         言語
+     * @param contentType      type
+     * @param responseConsumer 返答とステータスコードのペア
+     * @return 返答とステータスコードのペア
+     */
+    public static CompletableFuture<Void> getResponseByPOSTAsync(URL url, String body, String language, String contentType, Consumer<FNPair<String, Integer>> responseConsumer) {
+        return CompletableFuture.runAsync(() -> {
+            FNPair<String, Integer> ret = null;
+            try {
+                ret = getResponseByPOST(url, body, language, contentType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            responseConsumer.accept(ret);
+        });
+    }
+
+    /**
+     * POSTでテキストを送り返ってきた文字列とステータスコードを取得
+     *
+     * @param url         URL
+     * @param body        テキスト
+     * @param language    言語
+     * @param contentType type
+     * @return 返答とステータスコードのペア
+     * @throws IOException 失敗
+     */
+    public static FNPair<String, Integer> getResponseByPOST(URL url, String body, String language, String contentType) throws IOException {
+        HttpURLConnection con = getConnection(url);
+        con.setDoOutput(true);
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Accept-Language", language);
+        con.setRequestProperty("Content-Type", String.format("%s; charset=utf-8", contentType));
+        con.setRequestProperty("Content-Length", String.valueOf(body.getBytes(StandardCharsets.UTF_8).length));
+
+        OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
+        out.write(body);
+        out.flush();
+        con.connect();
+        int sts = con.getResponseCode();
+        StringBuilder sb = new StringBuilder();
+
+        InputStream in = con.getInputStream();
+        String encoding = con.getContentEncoding();
+        if (null == encoding) {
+            encoding = "UTF-8";
+        }
+        InputStreamReader inReader = new InputStreamReader(in, encoding);
+        BufferedReader bufReader = new BufferedReader(inReader);
+
+        String line;
+        while ((line = bufReader.readLine()) != null) {
+            sb.append(line);
+        }
+        bufReader.close();
+        inReader.close();
+        in.close();
+        return FNPair.of(sb.toString(), sts);
+    }
+
 }
