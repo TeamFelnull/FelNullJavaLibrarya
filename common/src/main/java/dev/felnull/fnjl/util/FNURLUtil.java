@@ -152,8 +152,8 @@ public class FNURLUtil {
         con.setRequestProperty("Content-Type", String.format("%s; charset=utf-8", contentType));
         con.setRequestProperty("Content-Length", String.valueOf(body.getBytes(StandardCharsets.UTF_8).length));
 
-        OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
-        out.write(body);
+        OutputStream out = con.getOutputStream();
+        out.write(body.getBytes(StandardCharsets.UTF_8));
         out.flush();
         con.connect();
         int sts = con.getResponseCode();
