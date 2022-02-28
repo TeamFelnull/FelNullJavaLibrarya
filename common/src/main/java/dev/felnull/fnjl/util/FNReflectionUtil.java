@@ -14,7 +14,7 @@ public class FNReflectionUtil {
 
     public static Class<?> getClassForName(String name, boolean initialize) {
         try {
-            return Class.forName(name, initialize, FNReflectionUtil.class.getClassLoader());
+            return Class.forName(name, initialize, ClassLoader.getSystemClassLoader());
         } catch (Exception ex) {
             return null;
         }
