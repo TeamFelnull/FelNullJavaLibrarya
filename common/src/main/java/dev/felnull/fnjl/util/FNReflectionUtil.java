@@ -19,4 +19,12 @@ public class FNReflectionUtil {
             return null;
         }
     }
+
+    public static Class<?> getClassForName(String name) {
+        try {
+            return Class.forName(name);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
 }
