@@ -27,6 +27,10 @@ public class FNVec2d {
         this.y = y;
     }
 
+    public double distance(FNVec2d vec) {
+        return Math.sqrt(Math.pow(x - vec.getX(), 2) + Math.pow(y - vec.getY(), 2));
+    }
+
     public double distance(FNVec2i vec) {
         return Math.sqrt(Math.pow(x - vec.getX(), 2) + Math.pow(y - vec.getY(), 2));
     }

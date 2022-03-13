@@ -5,7 +5,11 @@ import dev.felnull.fnjl.math.FNVec2d;
 import dev.felnull.fnjl.math.FNVec2f;
 import dev.felnull.fnjl.math.FNVec2i;
 import dev.felnull.fnjl.tuple.FNPair;
+import dev.felnull.fnjl.tuple.FNQuadruple;
+import dev.felnull.fnjl.tuple.FNTriple;
 import dev.felnull.fnjl.tuple.SimpleFNPair;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -170,7 +174,7 @@ public class FNMath {
      * @param num     度数
      * @return is fill
      */
-    public static boolean mandelbrot(FNComplex complex, int num) {
+    public static boolean mandelbrot(@NotNull FNComplex complex, int num) {
         return complex.mandelbrot(num) >= num;
     }
 
@@ -225,7 +229,8 @@ public class FNMath {
      * @param h 高さ
      * @return スケール
      */
-    public static FNVec2d scale(double w, double h) {
+    @Contract("_, _ -> new")
+    public static @NotNull FNVec2d scale(double w, double h) {
         if (w > h) {
             return new FNVec2d(1, h / w);
         } else {
@@ -240,7 +245,8 @@ public class FNMath {
      * @param values 値配列
      * @return 最も小さい値
      */
-    public static int min(int value, int... values) {
+    @Contract(pure = true)
+    public static int min(int value, int @NotNull ... values) {
         int min = value;
         for (int i : values) {
             if (min > i)
@@ -256,7 +262,8 @@ public class FNMath {
      * @param values 値配列
      * @return 最も小さい値
      */
-    public static float min(float value, float... values) {
+    @Contract(pure = true)
+    public static float min(float value, float @NotNull ... values) {
         float min = value;
         for (float i : values) {
             if (min > i)
@@ -272,7 +279,8 @@ public class FNMath {
      * @param values 値配列
      * @return 最も小さい値
      */
-    public static double min(double value, double... values) {
+    @Contract(pure = true)
+    public static double min(double value, double @NotNull ... values) {
         double min = value;
         for (double i : values) {
             if (min > i)
@@ -288,7 +296,8 @@ public class FNMath {
      * @param values 値配列
      * @return 最も小さい値
      */
-    public static long min(long value, long... values) {
+    @Contract(pure = true)
+    public static long min(long value, long @NotNull ... values) {
         long min = value;
         for (long i : values) {
             if (min > i)
@@ -304,7 +313,8 @@ public class FNMath {
      * @param values 値配列
      * @return 最も大きい値
      */
-    public static int max(int value, int... values) {
+    @Contract(pure = true)
+    public static int max(int value, int @NotNull ... values) {
         int max = value;
         for (int i : values) {
             if (max < i)
@@ -320,7 +330,8 @@ public class FNMath {
      * @param values 値配列
      * @return 最も大きい値
      */
-    public static float max(float value, float... values) {
+    @Contract(pure = true)
+    public static float max(float value, float @NotNull ... values) {
         float max = value;
         for (float i : values) {
             if (max < i)
@@ -336,7 +347,8 @@ public class FNMath {
      * @param values 値配列
      * @return 最も大きい値
      */
-    public static double max(double value, double... values) {
+    @Contract(pure = true)
+    public static double max(double value, double @NotNull ... values) {
         double max = value;
         for (double i : values) {
             if (max < i)
@@ -352,7 +364,8 @@ public class FNMath {
      * @param values 値配列
      * @return 最も大きい値
      */
-    public static long max(long value, long... values) {
+    @Contract(pure = true)
+    public static long max(long value, long @NotNull ... values) {
         long max = value;
         for (long i : values) {
             if (max < i)
@@ -370,13 +383,95 @@ public class FNMath {
      * @param v4 座標4
      * @return 開始座標と終了座標のペア
      */
-    public static FNPair<FNVec2f, FNVec2f> trans4to2CornerPlanes(FNVec2f v1, FNVec2f v2, FNVec2f v3, FNVec2f v4) {
+    @Contract("_, _, _, _ -> new")
+    public static @NotNull FNPair<FNVec2f, FNVec2f> trans4to2CornerPlanes(@NotNull FNVec2f v1, @NotNull FNVec2f v2, @NotNull FNVec2f v3, @NotNull FNVec2f v4) {
         float stX = min(v1.getX(), v2.getX(), v3.getX(), v4.getX());
         float stY = min(v1.getY(), v2.getY(), v3.getY(), v4.getY());
 
         float enX = max(v1.getX(), v2.getX(), v3.getX(), v4.getX());
         float enY = max(v1.getY(), v2.getY(), v3.getY(), v4.getY());
         return new SimpleFNPair<>(new FNVec2f(stX, stY), new FNVec2f(enX, enY));
+    }
+
+    /**
+     * オイラー角からクォータニオンへ変換
+     *
+     * @param roll  x
+     * @param pitch y
+     * @param yaw   z
+     * @return クォータニオン
+     * @see <a href="https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles">参考</a><br><a href="https://www.kazetest.com/vcmemo/quaternion/quaternion.htm">参考2</a>
+     */
+    public static @NotNull FNQuadruple<Double, Double, Double, Double> toQuaternion(double roll, double pitch, double yaw) {
+        double cy = Math.cos(yaw * 0.5);
+        double sy = Math.sin(yaw * 0.5);
+        double cp = Math.cos(pitch * 0.5);
+        double sp = Math.sin(pitch * 0.5);
+        double cr = Math.cos(roll * 0.5);
+        double sr = Math.sin(roll * 0.5);
+
+        double qw = cr * cp * cy + sr * sp * sy;
+        double qx = sr * cp * cy - cr * sp * sy;
+        double qy = cr * sp * cy + sr * cp * sy;
+        double qz = cr * cp * sy - sr * sp * cy;
+        return FNQuadruple.of(qx, qy, qz, qw);
+    }
+
+    /**
+     * クォータニオンからオイラー角へ変換
+     *
+     * @param x X
+     * @param y Y
+     * @param z Z
+     * @param w Angle
+     * @return オイラー角
+     * @see <a href="https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles">参考</a><br><a href="https://www.kazetest.com/vcmemo/quaternion/quaternion.htm">参考2</a>
+     */
+    public static @NotNull FNTriple<Double, Double, Double> toEulerAngle(double x, double y, double z, double w) {
+        double sinr_cosp = 2 * (w * x + y * z);
+        double cosr_cosp = 1 - 2 * (x * x + y * y);
+        double roll = Math.atan2(sinr_cosp, cosr_cosp);
+        double pitch;
+        double sinp = 2 * (w * y - z * x);
+        if (Math.abs(sinp) >= 1)
+            pitch = Math.copySign(Math.PI / 2, sinp);
+        else
+            pitch = Math.asin(sinp);
+
+        double siny_cosp = 2 * (w * z + x * y);
+        double cosy_cosp = 1 - 2 * (y * y + z * z);
+        double yaw = Math.atan2(siny_cosp, cosy_cosp);
+        return FNTriple.of(roll, pitch, yaw);
+    }
+
+    /**
+     * 高速逆平方根
+     *
+     * @param f 値
+     * @return 逆平方根
+     */
+    public static float fastInvSqrt(float f) {
+        float g = 0.5F * f;
+        int i = Float.floatToIntBits(f);
+        i = 1597463007 - (i >> 1);
+        f = Float.intBitsToFloat(i);
+        f *= 1.5F - g * f * f;
+        return f;
+    }
+
+    /**
+     * 高速逆平方根
+     *
+     * @param d 値
+     * @return 逆平方根
+     */
+    public static double fastInvSqrt(double d) {
+        double e = 0.5D * d;
+        long l = Double.doubleToRawLongBits(d);
+        l = 6910469410427058090L - (l >> 1);
+        d = Double.longBitsToDouble(l);
+        d *= 1.5D - e * d * d;
+        return d;
     }
 
     public static class PosColorEntry {
