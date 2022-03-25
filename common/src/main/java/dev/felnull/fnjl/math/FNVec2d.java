@@ -6,9 +6,16 @@ public class FNVec2d {
     private double x;
     private double y;
 
+    public FNVec2d() {
+    }
+
     public FNVec2d(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+
+    public FNVec2d copy() {
+        return new FNVec2d(x, y);
     }
 
     public double getX() {

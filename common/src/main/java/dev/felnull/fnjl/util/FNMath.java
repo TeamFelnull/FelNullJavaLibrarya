@@ -474,6 +474,61 @@ public class FNMath {
         return d;
     }
 
+    /**
+     * 回転の和
+     *
+     * @param v   値
+     * @param add 追加値
+     * @return 結果
+     */
+    private float addRotation(float v, float add) {
+        return (v + add) % 360;
+    }
+
+    /**
+     * 線形補完
+     *
+     * @param delta 経過
+     * @param old   最終値
+     * @param value 値
+     * @return 現在の値
+     */
+    public static float lerp(float delta, float old, float value) {
+        return old + delta * (value - old);
+    }
+
+    /**
+     * 線形補完(円形)
+     *
+     * @param delta 経過
+     * @param old   最終値
+     * @param value 値
+     * @return 現在の値
+     */
+    public static float lerpRoted(float delta, float old, float value) {
+        return lerpRoted(delta, old, value, 270);
+    }
+
+    /**
+     * 線形補完(円形)
+     *
+     * @param delta    経過
+     * @param old      最終値
+     * @param value    値
+     * @param maxValue 　360回転したときの検知用最大値
+     * @return 現在の値
+     */
+    public static float lerpRoted(float delta, float old, float value, float maxValue) {
+        float sa = Math.abs(value - old);
+        if (sa > maxValue) {
+            if (old < value)
+                value = -(360 - value);
+            else
+                value = 360 + value;
+        }
+        return lerp(delta, old, value);
+    }
+
     public static class PosColorEntry {
         private final FNVec2i pos;
         private final int color;

@@ -9,10 +9,17 @@ public class FNVec3i {
     private int y;
     private int z;
 
+    public FNVec3i() {
+    }
+
     public FNVec3i(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public FNVec3i copy() {
+        return new FNVec3i(x, y, z);
     }
 
     public int getX() {

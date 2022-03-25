@@ -11,10 +11,18 @@ public class FNVec3f {
     private float y;
     private float z;
 
+    public FNVec3f() {
+
+    }
+
     public FNVec3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public FNVec3f copy() {
+        return new FNVec3f(x, y, z);
     }
 
     public float getX() {

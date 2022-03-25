@@ -12,6 +12,10 @@ public class FNComplex {
     private double real;
     private double imag;
 
+    public FNComplex() {
+
+    }
+
     public FNComplex(double real, double imag) {
         this.real = real;
         this.imag = imag;

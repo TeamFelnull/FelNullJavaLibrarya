@@ -10,10 +10,17 @@ public class FNVec3d {
     private double y;
     private double z;
 
+    public FNVec3d() {
+    }
+
     public FNVec3d(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public FNVec3d copy() {
+        return new FNVec3d(x, y, z);
     }
 
     public double getX() {

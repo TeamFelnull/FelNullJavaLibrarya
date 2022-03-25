@@ -6,9 +6,17 @@ public class FNVec2i {
     private int x;
     private int y;
 
+    public FNVec2i() {
+
+    }
+
     public FNVec2i(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public FNVec2i copy() {
+        return new FNVec2i(x, y);
     }
 
     public int getX() {

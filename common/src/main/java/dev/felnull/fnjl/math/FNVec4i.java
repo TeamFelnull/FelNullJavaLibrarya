@@ -8,11 +8,18 @@ public class FNVec4i {
     private int z;
     private int w;
 
+    public FNVec4i() {
+    }
+
     public FNVec4i(int x, int y, int z, int w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
+    }
+
+    public FNVec4i copy() {
+        return new FNVec4i(x, y, z, w);
     }
 
     public int getX() {

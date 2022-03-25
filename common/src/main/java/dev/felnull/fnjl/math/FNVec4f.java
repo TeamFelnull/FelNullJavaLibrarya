@@ -11,11 +11,19 @@ public class FNVec4f {
     private float z;
     private float w;
 
+    public FNVec4f() {
+
+    }
+
     public FNVec4f(float x, float y, float z, float w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
+    }
+
+    public FNVec4f copy() {
+        return new FNVec4f(x, y, z, w);
     }
 
     public float getX() {

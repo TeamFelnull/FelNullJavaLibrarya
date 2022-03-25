@@ -11,11 +11,19 @@ public class FNVec4d {
     private double z;
     private double w;
 
+    public FNVec4d() {
+
+    }
+
     public FNVec4d(double x, double y, double z, double w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
+    }
+
+    public FNVec4d copy() {
+        return new FNVec4d(x, y, z, w);
     }
 
     public double getX() {

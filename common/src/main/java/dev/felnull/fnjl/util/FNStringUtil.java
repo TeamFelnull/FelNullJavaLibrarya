@@ -1,6 +1,9 @@
 package dev.felnull.fnjl.util;
 
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
@@ -224,6 +227,21 @@ public class FNStringUtil {
      */
     public static UUID fromNoHyphenStringToUUID(String uuidStr) {
         return UUID.fromString(uuidStr.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5"));
+    }
+
+    /**
+     * 変換で着ない場合はnullを返す
+     *
+     * @param text uuid文字列
+     * @return uuid
+     */
+    @Nullable
+    public static UUID getUUIDFromStringNonThrow(@NotNull String text) {
+        try {
+            return UUID.fromString(text);
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     /**
