@@ -1,5 +1,5 @@
 package dev.felnull.fnjl;
 
 public class FNJLBuildIn {
-    protected static final String VERSION = "1.48";
+    protected static final String VERSION = "1.49";
 }
