@@ -1,9 +1,6 @@
 package dev.felnull.fnjl.util;
 
-import dev.felnull.fnjl.math.FNComplex;
-import dev.felnull.fnjl.math.FNVec2d;
-import dev.felnull.fnjl.math.FNVec2f;
-import dev.felnull.fnjl.math.FNVec2i;
+import dev.felnull.fnjl.math.*;
 import dev.felnull.fnjl.tuple.FNPair;
 import dev.felnull.fnjl.tuple.FNQuadruple;
 import dev.felnull.fnjl.tuple.FNTriple;
@@ -527,6 +524,91 @@ public class FNMath {
                 value = 360 + value;
         }
         return lerp(delta, old, value);
+    }
+
+    /**
+     * 二つの2次元の線の交差点
+     *
+     * @param line1 線1
+     * @param line2 線2
+     * @return 交差点座標
+     * @see <a href="https://asakaze-net.jp/webcalc/webcalc_p10.asp">確認 </a> <a href="https://mf-atelier.sakura.ne.jp/mf-atelier2/a1/">参考</a>
+     */
+    public static FNVec2d getLinesIntersectPoint(FNVec4d line1, FNVec4d line2) {
+        double x = (line2.getY() * line2.getZ() - line2.getX() * line2.getW()) * (line1.getZ() - line1.getX()) - (line1.getY() * line1.getZ() - line1.getX() * line1.getW()) * (line2.getZ() - line2.getX());
+        x /= (line1.getW() - line1.getY()) * (line2.getZ() - line2.getX()) - (line1.getZ() - line1.getX()) * (line2.getW() - line2.getY());
+
+        double y = (line2.getY() * line2.getZ() - line2.getX() * line2.getW()) * (line1.getW() - line1.getY()) - (line1.getY() * line1.getZ() - line1.getX() * line1.getW()) * (line2.getW() - line2.getY());
+        y /= (line1.getW() - line1.getY()) * (line2.getZ() - line2.getX()) - (line1.getZ() - line1.getX()) * (line2.getW() - line2.getY());
+
+        if (!Double.isFinite(x) || !Double.isFinite(y))
+            return null;
+        return new FNVec2d(x, y);
+    }
+
+    /**
+     * 二つの2次元の線の交差点
+     *
+     * @param line1 線1
+     * @param line2 線2
+     * @return 交差点座標
+     * @see <a href="https://www.s-projects.net/line-line.html">確認1 </a><a href="https://asakaze-net.jp/webcalc/webcalc_p10.asp">確認2 </a> <a href="https://mf-atelier.sakura.ne.jp/mf-atelier2/a1/">参考</a>
+     */
+    public static FNVec2d getLinesIntersectPoint(FN2dLine line1, FN2dLine line2) {
+        double x = (line2.getFromY() * line2.getToX() - line2.getFromX() * line2.getToY()) * (line1.getToX() - line1.getFromX()) - (line1.getFromY() * line1.getToX() - line1.getFromX() * line1.getToY()) * (line2.getToX() - line2.getFromX());
+        x /= (line1.getToY() - line1.getFromY()) * (line2.getToX() - line2.getFromX()) - (line1.getToX() - line1.getFromX()) * (line2.getToY() - line2.getFromY());
+
+        double y = (line2.getFromY() * line2.getToX() - line2.getFromX() * line2.getToY()) * (line1.getToY() - line1.getFromY()) - (line1.getFromY() * line1.getToX() - line1.getFromX() * line1.getToY()) * (line2.getToY() - line2.getFromY());
+        y /= (line1.getToY() - line1.getFromY()) * (line2.getToX() - line2.getFromX()) - (line1.getToX() - line1.getFromX()) * (line2.getToY() - line2.getFromY());
+
+        if (!Double.isFinite(x) || !Double.isFinite(y))
+            return null;
+        return new FNVec2d(x, y);
+    }
+
+    /**
+     * 指定の線の上に点があるかどうか
+     *
+     * @param line  線
+     * @param point 点
+     * @return 存在するかどうか
+     * @see <a href="https://zaki0929.github.io/page34.html">参考</a>
+     */
+    public static boolean isPointOnLine(FN2dLine line, FNVec2d point) {
+        if ((line.getFromX() <= point.getX() && point.getX() <= line.getToX()) || (line.getToX() <= point.getX() && point.getX() <= line.getToX())) {
+            if ((line.getFromY() <= point.getY() && point.getY() <= line.getToY()) || (line.getToY() <= point.getY() && point.getY() <= line.getFromY())) {
+                return (point.getY() * (line.getFromX() - line.getToX())) + (line.getFromY() * (line.getToX() - point.getX())) + (line.getToY() * (point.getX() - line.getFromX())) == 0;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * ２点の線の角度を求める
+     *
+     * @param from 開始点
+     * @param to   終了点
+     * @return 角度(Degrees)
+     */
+    public static double getAngle(FNVec2d from, FNVec2d to) {
+        double x = to.getX() - from.getX();
+        double y = to.getY() - from.getY();
+        double n = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return Math.toDegrees(Math.acos(x / n));
+    }
+
+    /**
+     * ２点の線の角度を求める
+     *
+     * @param from 開始点
+     * @param to   終了点
+     * @return 角度(Degrees XYZ)
+     */
+    public static FNVec3d getAngle(FNVec3d from, FNVec3d to) {
+        double x = FNMath.getAngle(new FNVec2d(from.getZ(), from.getY()), new FNVec2d(to.getZ(), to.getY()));
+        double y = FNMath.getAngle(new FNVec2d(from.getX(), from.getZ()), new FNVec2d(to.getX(), to.getZ()));
+        double z = FNMath.getAngle(new FNVec2d(from.getX(), from.getY()), new FNVec2d(to.getX(), to.getY()));
+        return new FNVec3d(x, y, z);
     }
 
     public static class PosColorEntry {
