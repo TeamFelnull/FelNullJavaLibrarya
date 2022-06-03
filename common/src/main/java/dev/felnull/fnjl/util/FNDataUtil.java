@@ -6,6 +6,8 @@ import dev.felnull.fnjl.io.ProgressWriter;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.security.MessageDigest;
@@ -25,6 +27,52 @@ import java.util.zip.ZipInputStream;
  * @since 1.0
  */
 public class FNDataUtil {
+    /**
+     * InputStreamを文字列へ変換
+     *
+     * @param stream 対象ストリーム
+     * @return 変換後
+     * @throws IOException 例外
+     */
+    public static String readAllString(InputStream stream) throws IOException {
+        return readAllString(stream, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * InputStreamを文字列へ変換
+     *
+     * @param stream 対象ストリーム
+     * @param cs     文字コード
+     * @return 変換後
+     * @throws IOException 例外
+     */
+    public static String readAllString(InputStream stream, Charset cs) throws IOException {
+        try (Reader reader = new InputStreamReader(stream, cs)) {
+            return readAllString(reader);
+        }
+    }
+
+    /**
+     * Readerを文字列へ変換
+     *
+     * @param reader 　リーダー
+     * @return 変換後
+     * @throws IOException 例外
+     */
+    public static String readAllString(Reader reader) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        boolean flg = false;
+        try (BufferedReader breader = new BufferedReader(reader)) {
+            String next;
+            while ((next = breader.readLine()) != null) {
+                if (flg)
+                    sb.append('\n');
+                sb.append(next);
+                flg = true;
+            }
+        }
+        return sb.toString();
+    }
 
     /**
      * バッファー付きストリームをバイト配列へ変換

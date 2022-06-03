@@ -45,13 +45,17 @@ public class DiscordWebHookBuilder {
     }
 
     public int send() throws IOException {
-        return FNURLUtil.getResponseByPOST(new URL(url), createContent(), "jp", "application/JSON").getEntry();
+        return FNURLUtil.getResponseByPOST(new URL(url), createContent(), "jp", "application/JSON").getCode();
     }
 
     public CompletableFuture<Void> sendAsync(Consumer<Integer> response) throws IOException {
         return FNURLUtil.getResponseByPOSTAsync(new URL(url), createContent(), "jp", "application/JSON", n -> {
             if (response != null)
-                response.accept(n.getRight());
+                response.accept(n.getCode());
         });
+    }
+
+    public static DiscordWebHookBuilder newBuilder(String url, String content) {
+        return new DiscordWebHookBuilder(url, content);
     }
 }

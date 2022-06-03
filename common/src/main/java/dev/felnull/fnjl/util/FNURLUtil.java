@@ -1,12 +1,19 @@
 package dev.felnull.fnjl.util;
 
 import dev.felnull.fnjl.FelNullJavaLibrary;
-import dev.felnull.fnjl.tuple.FNPair;
+import dev.felnull.fnjl.io.PostRequest;
+import dev.felnull.fnjl.io.PostResponse;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -18,15 +25,47 @@ import java.util.function.Consumer;
  */
 public class FNURLUtil {
     /**
+     * 例外なし new URL
+     *
+     * @param url url
+     * @return url
+     */
+    @Nullable
+    public static URL newURL(@Nullable String url) {
+        try {
+            return new URL(Objects.requireNonNull(url));
+        } catch (MalformedURLException | NullPointerException e) {
+            return null;
+        }
+    }
+
+    /**
      * ユーザエージェント取得
      *
      * @return ユーザエージェント
      */
+    @NotNull
     public static String getUserAgent() {
         String jv = System.getProperty("java.version");
         String jvn = System.getProperty("java.vm.name");
         String jvv = System.getProperty("java.vm.version");
-        return String.format("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36 %s %s", "Java/" + jv + " (" + jvn + "; " + jvv + ")", "FelNullJavaLibrary/" + FelNullJavaLibrary.getVersion());
+        return String.format("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36 %s %s", "Java/" + jv + " (" + jvn + "; " + jvv + ")", "FelNullJavaLibrary/" + FelNullJavaLibrary.getVersion());
+    }
+
+    /**
+     * 接続を確立する
+     *
+     * @param url     URL
+     * @param headers ヘッダー
+     * @return 接続
+     * @throws IOException 接続失敗
+     */
+    @NotNull
+    public static HttpURLConnection getConnection(@NotNull URL url, @NotNull Map<String, String> headers) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.addRequestProperty("user-agent", getUserAgent());
+        headers.forEach(connection::addRequestProperty);
+        return connection;
     }
 
     /**
@@ -36,10 +75,9 @@ public class FNURLUtil {
      * @return 接続
      * @throws IOException 接続失敗
      */
-    public static HttpURLConnection getConnection(URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.addRequestProperty("user-agent", getUserAgent());
-        return connection;
+    @NotNull
+    public static HttpURLConnection getConnection(@NotNull URL url) throws IOException {
+        return getConnection(url, Map.of());
     }
 
     /**
@@ -49,10 +87,9 @@ public class FNURLUtil {
      * @return ストリーム
      * @throws IOException 接続失敗
      */
-    public static InputStream getStream(URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.addRequestProperty("user-agent", getUserAgent());
-        return connection.getInputStream();
+    @NotNull
+    public static InputStream getStream(@NotNull URL url) throws IOException {
+        return getConnection(url).getInputStream();
     }
 
     /**
@@ -62,14 +99,9 @@ public class FNURLUtil {
      * @return 文字列
      * @throws IOException 接続失敗
      */
-    public static String getResponse(URL url) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(getStream(url), StandardCharsets.UTF_8));
-        StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null)
-            sb.append(inputLine).append('\n');
-        in.close();
-        return sb.toString();
+    @NotNull
+    public static String getResponse(@NotNull URL url) throws IOException {
+        return FNDataUtil.readAllString(getStream(url));
     }
 
     /**
@@ -122,9 +154,9 @@ public class FNURLUtil {
      * @param responseConsumer 返答とステータスコードのペア
      * @return 返答とステータスコードのペア
      */
-    public static CompletableFuture<Void> getResponseByPOSTAsync(URL url, String body, String language, String contentType, Consumer<FNPair<String, Integer>> responseConsumer) {
+    public static CompletableFuture<Void> getResponseByPOSTAsync(URL url, String body, String language, String contentType, Consumer<PostResponse> responseConsumer) {
         return CompletableFuture.runAsync(() -> {
-            FNPair<String, Integer> ret = null;
+            PostResponse ret = null;
             try {
                 ret = getResponseByPOST(url, body, language, contentType);
             } catch (IOException e) {
@@ -142,39 +174,53 @@ public class FNURLUtil {
      * @param language    言語
      * @param contentType type
      * @return 返答とステータスコードのペア
-     * @throws IOException 失敗
+     * @throws IOException 例外
      */
-    public static FNPair<String, Integer> getResponseByPOST(URL url, String body, String language, String contentType) throws IOException {
-        HttpURLConnection con = getConnection(url);
-        con.setDoOutput(true);
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Accept-Language", language);
-        con.setRequestProperty("Content-Type", String.format("%s; charset=utf-8", contentType));
-        con.setRequestProperty("Content-Length", String.valueOf(body.getBytes(StandardCharsets.UTF_8).length));
-
-        OutputStream out = con.getOutputStream();
-        out.write(body.getBytes(StandardCharsets.UTF_8));
-        out.flush();
-        con.connect();
-        int sts = con.getResponseCode();
-        StringBuilder sb = new StringBuilder();
-
-        InputStream in = con.getInputStream();
-        String encoding = con.getContentEncoding();
-        if (null == encoding) {
-            encoding = "UTF-8";
-        }
-        InputStreamReader inReader = new InputStreamReader(in, encoding);
-        BufferedReader bufReader = new BufferedReader(inReader);
-
-        String line;
-        while ((line = bufReader.readLine()) != null) {
-            sb.append(line);
-        }
-        bufReader.close();
-        inReader.close();
-        in.close();
-        return FNPair.of(sb.toString(), sts);
+    @NotNull
+    public static PostResponse getResponseByPOST(@NotNull URL url, @NotNull String body, @NotNull String language, @NotNull String contentType) throws IOException {
+        return getResponseByPOST(url, PostRequest.newRequest(body, PostRequest.HeaderBuilder.newBuilder().setLanguage(language).setContentType(contentType).build()));
     }
 
+    /**
+     * POSTでデータを送信
+     *
+     * @param url     URL
+     * @param body    本体
+     * @param headers ヘッダー
+     * @return 応答
+     * @throws IOException 例外
+     */
+    @NotNull
+    public static PostResponse getResponseByPOST(@NotNull URL url, byte[] body, @NotNull Map<String, String> headers) throws IOException {
+        return getResponseByPOST(url, PostRequest.newRequest(body, headers));
+    }
+
+    /**
+     * POSTでデータを送信
+     *
+     * @param url     URL
+     * @param request リクエスト
+     * @return 応答
+     * @throws IOException 例外
+     */
+    @NotNull
+    public static PostResponse getResponseByPOST(@NotNull URL url, @NotNull PostRequest request) throws IOException {
+        HttpURLConnection con = getConnection(url, request.getHeaders());
+        con.setDoOutput(true);
+        con.setRequestMethod("POST");
+
+        try (OutputStream outst = con.getOutputStream()) {
+            request.getBody().accept(outst);
+            outst.flush();
+        }
+
+        con.connect();
+        int sts = con.getResponseCode();
+        byte[] res;
+        String encoding = con.getContentEncoding();
+        try (InputStream in = con.getInputStream()) {
+            res = FNDataUtil.streamToByteArray(in);
+        }
+        return new PostResponse(res, sts, encoding);
+    }
 }
