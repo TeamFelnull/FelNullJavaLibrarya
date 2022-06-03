@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -77,7 +78,7 @@ public class FNURLUtil {
      */
     @NotNull
     public static HttpURLConnection getConnection(@NotNull URL url) throws IOException {
-        return getConnection(url, Map.of());
+        return getConnection(url, new HashMap<>());
     }
 
     /**

@@ -3,3 +3,6 @@ rootProject.name = 'FelNullJavaLibrary'
 include("common")
 include("natives")
 
+if (JavaVersion.current().ordinal() + 1 != 8)
+    throw new IllegalStateException("Java8使ってくれよな～頼むよ～")
+
