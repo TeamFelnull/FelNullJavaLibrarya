@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.security.MessageDigest;
@@ -267,7 +268,7 @@ public class FNDataUtil {
      * @throws IOException 例外
      */
     public static byte[] fileLoadToProgress(File file, Consumer<ProgressWriter.WriteProgressListener> progress) throws IOException {
-        return loadToProgress(new FileInputStream(file), file.length(), progress);
+        return loadToProgress(Files.newInputStream(file.toPath()), file.length(), progress);
     }
 
     /**

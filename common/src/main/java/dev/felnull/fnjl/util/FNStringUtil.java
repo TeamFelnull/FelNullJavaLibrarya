@@ -1,7 +1,6 @@
 package dev.felnull.fnjl.util;
 
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
@@ -232,11 +231,26 @@ public class FNStringUtil {
     /**
      * 変換で着ない場合はnullを返す
      *
+     * @param text ハイフン無しUUID文字列
+     * @return uuid
+     */
+    @Nullable
+    public static UUID getUUIDFromNoHyphenStringNonThrow(String text) {
+        try {
+            return fromNoHyphenStringToUUID(text);
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
+    /**
+     * 変換で着ない場合はnullを返す
+     *
      * @param text uuid文字列
      * @return uuid
      */
     @Nullable
-    public static UUID getUUIDFromStringNonThrow(@NotNull String text) {
+    public static UUID getUUIDFromStringNonThrow(String text) {
         try {
             return UUID.fromString(text);
         } catch (Exception ignored) {

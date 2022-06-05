@@ -28,9 +28,11 @@ public class PostResponse {
 
     public String getResponseString() {
         try {
+            if (encoding == null)
+                return new String(response);
             return new String(response, encoding);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            return new String(response);
         }
     }
 }
