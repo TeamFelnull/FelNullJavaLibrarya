@@ -13,9 +13,12 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -386,5 +389,24 @@ public class FNDataUtil {
                 zips.accept(e, null);
             }
         });
+    }
+
+    /**
+     * メモ化
+     *
+     * @param function Function
+     * @param <T>      値
+     * @param <M>      結果
+     * @return メモ化済みFunction
+     */
+    public static <T, M> Function<T, M> memoize(final Function<T, M> function) {
+        return new Function<T, M>() {
+            private final Map<T, M> cache = new HashMap<>();
+
+            @Override
+            public M apply(T t) {
+                return cache.computeIfAbsent(t, function);
+            }
+        };
     }
 }

@@ -7,6 +7,12 @@ group rootProject.group
 archivesBaseName = rootProject.archivesBaseName
 version rootProject.version
 
+jar {
+    manifest {
+        attributes 'Implementation-Version': project.version
+    }
+}
+
 repositories {
     mavenCentral()
 }

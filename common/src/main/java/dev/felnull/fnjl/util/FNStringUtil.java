@@ -17,6 +17,17 @@ public class FNStringUtil {
     private static final String[] unit = {"K", "M", "G", "T", "P", "E", "Z", "Y"};
 
     /**
+     * nullが渡されたら空を返す
+     *
+     * @param text テキスト
+     * @return 結果
+     */
+    public static String emptyIfNull(@Nullable String text) {
+        if (text == null) return "";
+        return text;
+    }
+
+    /**
      * UTFエスケープシーケンス文字列を文字列に変換
      *
      * @param unicode 対象UTFエスケープシーケンス文字列

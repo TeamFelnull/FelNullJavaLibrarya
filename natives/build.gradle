@@ -6,6 +6,11 @@ plugins {
 group rootProject.group
 archivesBaseName = rootProject.archivesBaseName + "-natives"
 version rootProject.version
+jar {
+    manifest {
+        attributes 'Implementation-Version': project.version
+    }
+}
 
 repositories {
     mavenCentral()
