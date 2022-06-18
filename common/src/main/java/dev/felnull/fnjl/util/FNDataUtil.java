@@ -282,6 +282,9 @@ public class FNDataUtil {
      * @return InputStream
      */
     public static InputStream resourceExtractor(Class<?> targetClass, String path) {
+        if (path.startsWith("/"))
+            path = path.substring(1);
+
         InputStream stream = targetClass.getResourceAsStream("/" + path);
         if (stream == null)
             stream = ClassLoader.getSystemResourceAsStream(path);
