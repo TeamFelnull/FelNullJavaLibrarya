@@ -2,6 +2,7 @@ package dev.felnull.fnjl.util;
 
 import dev.felnull.fnjl.io.FileWatcher;
 import dev.felnull.fnjl.io.ProgressWriter;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -139,13 +140,12 @@ public class FNDataUtil {
      * @return GZ圧縮済みストリーム
      * @throws IOException 変換失敗
      */
-    public static InputStream zipGz(InputStream data) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        GZIPOutputStream gos = new GZIPOutputStream(baos);
-        gos.write(streamToByteArray(data));
-        gos.close();
-        baos.close();
-        return new ByteArrayInputStream(baos.toByteArray());
+    @NotNull
+    public static InputStream zipGz(@NotNull InputStream data) throws IOException {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); GZIPOutputStream gos = new GZIPOutputStream(baos)) {
+            inputToOutput(data, gos);
+            return new ByteArrayInputStream(baos.toByteArray());
+        }
     }
 
     /**
@@ -221,7 +221,7 @@ public class FNDataUtil {
      * @throws IOException 例外
      */
     public static void fileCopyToProgress(File copyFile, File file, Consumer<ProgressWriter.WriteProgressListener> progress) throws IOException {
-        fileWriteToProgress(new FileInputStream(copyFile), copyFile.length(), file, progress);
+        fileWriteToProgress(Files.newInputStream(copyFile.toPath()), copyFile.length(), file, progress);
     }
 
     /**

@@ -108,62 +108,101 @@ public class FNURLUtil {
     /**
      * 非同期でストリームを取得
      * 失敗時はnullを返す
+     * {@link #getStreamAsync(URL)}に移行してください
      *
      * @param url            URL
      * @param streamConsumer ストリーム
      * @return 処理結果
      */
+    @Deprecated
     public static CompletableFuture<Void> getStreamAsync(URL url, Consumer<InputStream> streamConsumer) {
-        return CompletableFuture.runAsync(() -> {
-            InputStream stream = null;
+        return getStreamAsync(url).thenAccept(streamConsumer);
+    }
+
+    /**
+     * 非同期でストリームを取得
+     * 失敗時はnullを返す
+     *
+     * @param url URL
+     * @return ストリーム
+     */
+    @NotNull
+    public static CompletableFuture<InputStream> getStreamAsync(@NotNull URL url) {
+        return CompletableFuture.supplyAsync(() -> {
             try {
-                stream = getStream(url);
+                return getStream(url);
             } catch (IOException e) {
-                e.printStackTrace();
+                return null;
             }
-            streamConsumer.accept(stream);
         });
     }
 
     /**
      * 非同期で文字列を取得
      * 失敗時はnullを返す
+     * {@link #getResponseAsync(URL)}に移行してください
      *
      * @param url            URL
      * @param stringConsumer 文字列
      * @return 処理結果
      */
+    @Deprecated()
     public static CompletableFuture<Void> getResponseAsync(URL url, Consumer<String> stringConsumer) {
-        return CompletableFuture.runAsync(() -> {
-            String str = null;
+        return getResponseAsync(url).thenAccept(stringConsumer);
+    }
+
+    /**
+     * 非同期で文字列を取得
+     * 失敗時はnullを返す
+     *
+     * @param url URL
+     * @return 処理結果
+     */
+    @NotNull
+    public static CompletableFuture<String> getResponseAsync(@NotNull URL url) {
+        return CompletableFuture.supplyAsync(() -> {
             try {
-                str = getResponse(url);
+                return getResponse(url);
             } catch (IOException e) {
-                e.printStackTrace();
+                return null;
             }
-            stringConsumer.accept(str);
         });
     }
 
     /**
-     * POSTでテキストを送り返ってきた文字列とステータスコードを取得
+     * 非同期でPOSTでテキストを送り返ってきた文字列とステータスコードを取得
+     * {@link #getResponseByPOSTAsync(URL, String, String, String)}に移行してください
      *
      * @param url              URL
      * @param body             テキスト
      * @param language         言語
      * @param contentType      type
      * @param responseConsumer 返答とステータスコードのペア
-     * @return 返答とステータスコードのペア
+     * @return 返答
      */
+    @Deprecated
     public static CompletableFuture<Void> getResponseByPOSTAsync(URL url, String body, String language, String contentType, Consumer<PostResponse> responseConsumer) {
-        return CompletableFuture.runAsync(() -> {
-            PostResponse ret = null;
+        return getResponseByPOSTAsync(url, body, language, contentType).thenAccept(responseConsumer);
+    }
+
+    /**
+     * 非同期でPOSTでテキストを送り返ってきた文字列とステータスコードを取得
+     * 失敗時はnullを返す
+     *
+     * @param url         URL
+     * @param body        テキスト
+     * @param language    言語
+     * @param contentType type
+     * @return 返答
+     */
+    @NotNull
+    public static CompletableFuture<PostResponse> getResponseByPOSTAsync(@NotNull URL url, @NotNull String body, @NotNull String language, @NotNull String contentType) {
+        return CompletableFuture.supplyAsync(() -> {
             try {
-                ret = getResponseByPOST(url, body, language, contentType);
+                return getResponseByPOST(url, body, language, contentType);
             } catch (IOException e) {
-                e.printStackTrace();
+                return null;
             }
-            responseConsumer.accept(ret);
         });
     }
 

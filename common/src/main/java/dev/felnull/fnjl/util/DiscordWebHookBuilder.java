@@ -1,5 +1,7 @@
 package dev.felnull.fnjl.util;
 
+import dev.felnull.fnjl.io.PostResponse;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
@@ -48,11 +50,16 @@ public class DiscordWebHookBuilder {
         return FNURLUtil.getResponseByPOST(new URL(url), createContent(), "jp", "application/JSON").getCode();
     }
 
+    @Deprecated
     public CompletableFuture<Void> sendAsync(Consumer<Integer> response) throws IOException {
-        return FNURLUtil.getResponseByPOSTAsync(new URL(url), createContent(), "jp", "application/JSON", n -> {
+        return FNURLUtil.getResponseByPOSTAsync(new URL(url), createContent(), "jp", "application/JSON").thenAccept(n -> {
             if (response != null)
                 response.accept(n.getCode());
         });
+    }
+
+    public CompletableFuture<Integer> sendAsync() throws IOException {
+        return FNURLUtil.getResponseByPOSTAsync(new URL(url), createContent(), "jp", "application/JSON").thenApply(PostResponse::getCode);
     }
 
     public static DiscordWebHookBuilder newBuilder(String url, String content) {
