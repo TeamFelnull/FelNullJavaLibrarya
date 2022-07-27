@@ -2,24 +2,28 @@ package dev.felnull.fnjl.util;
 
 import dev.felnull.fnjl.io.FileWatcher;
 import dev.felnull.fnjl.io.ProgressWriter;
+import dev.felnull.fnjl.io.resource.ResourceEntry;
+import dev.felnull.fnjl.io.resource.impl.ResourceEntryImpl;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.WatchEvent;
+import java.nio.file.FileSystem;
+import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -70,8 +74,7 @@ public class FNDataUtil {
         try (BufferedReader breader = new BufferedReader(reader)) {
             String next;
             while ((next = breader.readLine()) != null) {
-                if (flg)
-                    sb.append('\n');
+                if (flg) sb.append('\n');
                 sb.append(next);
                 flg = true;
             }
@@ -181,8 +184,7 @@ public class FNDataUtil {
      * @throws IOException 例外
      */
     public static void fileWriteToProgress(InputStream stream, long length, File file, Consumer<ProgressWriter.WriteProgressListener> progress) throws IOException {
-        if (length <= 0)
-            throw new IOException("Invalid length");
+        if (length <= 0) throw new IOException("Invalid length");
         FileOutputStream fos = new FileOutputStream(file);
         BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
         ProgressWriter writer = new ProgressWriter(stream, length, data -> {
@@ -234,8 +236,7 @@ public class FNDataUtil {
      * @throws IOException 例外
      */
     public static byte[] loadToProgress(InputStream stream, long length, Consumer<ProgressWriter.WriteProgressListener> progress) throws IOException {
-        if (length <= 0)
-            throw new IOException("Invalid length");
+        if (length <= 0) throw new IOException("Invalid length");
         byte[] bytes = new byte[Math.toIntExact(length)];
         AtomicInteger cont = new AtomicInteger();
         ProgressWriter writer = new ProgressWriter(stream, length, data -> {
@@ -277,17 +278,16 @@ public class FNDataUtil {
     /**
      * リソースフォルダからデータを抽出
      *
-     * @param targetClass リソースフォルダのクラス
-     * @param path        リソースパス
+     * @param clazz リソースフォルダのクラス
+     * @param path  リソースパス
      * @return InputStream
      */
-    public static InputStream resourceExtractor(Class<?> targetClass, String path) {
-        if (path.startsWith("/"))
-            path = path.substring(1);
+    @Nullable
+    public static InputStream resourceExtractor(@NotNull Class<?> clazz, @NotNull String path) {
+        if (path.startsWith("/")) path = path.substring(1);
 
-        InputStream stream = targetClass.getResourceAsStream("/" + path);
-        if (stream == null)
-            stream = ClassLoader.getSystemResourceAsStream(path);
+        InputStream stream = clazz.getResourceAsStream("/" + path);
+        if (stream == null) stream = ClassLoader.getSystemResourceAsStream(path);
         return stream != null ? new BufferedInputStream(stream) : null;
     }
 
@@ -412,4 +412,49 @@ public class FNDataUtil {
             }
         };
     }
+
+    /**
+     * リソースディレクトリ内のファイルの一覧を表示
+     *
+     * @param clazz 対象パッケージクラス
+     * @param path  パス
+     * @return エントリ
+     */
+    @NotNull
+    public static List<ResourceEntry> resourceExtractEntry(@NotNull Class<?> clazz, @NotNull String path) {
+        if (!path.startsWith("/")) path = "/" + path;
+        URL url = clazz.getResource(path);
+        Path tp = Paths.get(path);
+
+        if (url != null) {
+            try {
+                URI uri = url.toURI();
+                String scheme = uri.getScheme();
+                if ("jar".equals(uri.getScheme())) {
+                    try (FileSystem fs = FileSystems.newFileSystem(uri, new HashMap<>())) {
+                        return getResourceEntry(fs.getPath(path), tp, scheme, clazz);
+                    }
+                } else {
+                    return getResourceEntry(Paths.get(uri), tp, scheme, clazz);
+                }
+            } catch (URISyntaxException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        throw new RuntimeException("not exists file");
+    }
+
+    private static List<ResourceEntry> getResourceEntry(Path path, Path targetPath, String scheme, Class<?> clazz) throws IOException {
+        List<ResourceEntry> entries = new ArrayList<>();
+        try (Stream<Path> wlk = Files.walk(path, 1).filter(n -> !n.equals(path))) {
+            wlk.forEach(p -> {
+                String name = p.getName(p.getNameCount() - 1).toString();
+                ResourceEntry re = new ResourceEntryImpl(name, Files.isDirectory(p), scheme, targetPath.resolve(name).toString(), clazz);
+                entries.add(re);
+            });
+        }
+        return Collections.unmodifiableList(entries);
+    }
+
 }
