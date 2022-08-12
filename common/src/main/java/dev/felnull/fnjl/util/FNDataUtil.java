@@ -408,7 +408,9 @@ public class FNDataUtil {
 
             @Override
             public M apply(T t) {
-                return cache.computeIfAbsent(t, function);
+                synchronized (cache) {
+                    return cache.computeIfAbsent(t, function);
+                }
             }
         };
     }
