@@ -1,4 +1,4 @@
-package dev.felnull.fnjl.io;
+package dev.felnull.fnjl.io.watcher;
 
 import java.io.IOException;
 import java.nio.file.*;

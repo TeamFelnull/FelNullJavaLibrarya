@@ -21,4 +21,5 @@ public class FNAwtUtil {
         StringSelection selection = new StringSelection(text);
         clipboard.setContents(selection, selection);
     }
+
 }

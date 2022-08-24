@@ -1,12 +1,13 @@
-package dev.felnull.fnjl.io.resource.impl;
+package dev.felnull.fnjl.io.resource;
 
-import dev.felnull.fnjl.io.resource.ResourceEntry;
 import dev.felnull.fnjl.util.FNDataUtil;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.util.Objects;
 
+@ApiStatus.Internal
 public class ResourceEntryImpl implements ResourceEntry {
     private final String name;
     private final boolean directory;
@@ -39,7 +40,7 @@ public class ResourceEntryImpl implements ResourceEntry {
 
     @Override
     public InputStream openInputStream() {
-        if(isDirectory())
+        if (isDirectory())
             throw new RuntimeException("directory");
 
         return FNDataUtil.resourceExtractor(clazz, path);

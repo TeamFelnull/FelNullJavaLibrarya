@@ -1,9 +1,10 @@
 package dev.felnull.fnjl.util;
 
-import dev.felnull.fnjl.io.FileWatcher;
 import dev.felnull.fnjl.io.ProgressWriter;
 import dev.felnull.fnjl.io.resource.ResourceEntry;
-import dev.felnull.fnjl.io.resource.impl.ResourceEntryImpl;
+import dev.felnull.fnjl.io.resource.ResourceEntryImpl;
+import dev.felnull.fnjl.io.watcher.FileSystemWatcher;
+import dev.felnull.fnjl.io.watcher.SingleFileSystemWatcherImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +20,7 @@ import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -299,9 +301,38 @@ public class FNDataUtil {
      * @param events   監視エベント  StandardWatchEventKinds.ENTRY_MODIFYなど
      * @throws IOException 例外
      */
+    @Deprecated
     public static void watchFile(Path path, Consumer<WatchEvent<?>> listener, WatchEvent.Kind<?>... events) throws IOException {
-        FileWatcher watcher = new FileWatcher(path, listener, events);
-        watcher.start();
+        watchFile(path, (watchEvent, path1) -> listener.accept(watchEvent), events);
+    }
+
+    /**
+     * ファイルを監視
+     *
+     * @param path     監視対象パス
+     * @param listener 監視リスナー
+     * @param events   監視イベントの類 StandardWatchEventKinds.ENTRY_MODIFYなど
+     * @return FileWatcher
+     * @throws IOException 例外
+     */
+    @NotNull
+    public static FileSystemWatcher watchFile(@NotNull Path path, @NotNull SingleFileSystemWatcherImpl.WatchEventListener listener, @NotNull WatchEvent.Kind<?>... events) throws IOException {
+        return FileSystemWatcher.newFileWatcher(path, listener, events);
+    }
+
+    /**
+     * ファイルを監視
+     *
+     * @param path          監視対象パス
+     * @param listener      監視リスナー
+     * @param threadFactory 監視用スレッドのファクトリー
+     * @param events        監視イベントの類 StandardWatchEventKinds.ENTRY_MODIFYなど
+     * @return FileWatcher
+     * @throws IOException 例外
+     */
+    @NotNull
+    public static FileSystemWatcher watchFile(@NotNull Path path, @NotNull SingleFileSystemWatcherImpl.WatchEventListener listener, @NotNull ThreadFactory threadFactory, @NotNull WatchEvent.Kind<?>... events) throws IOException {
+        return FileSystemWatcher.newFileWatcher(path, listener, threadFactory, events);
     }
 
     /**
@@ -402,7 +433,8 @@ public class FNDataUtil {
      * @param <M>      結果
      * @return メモ化済みFunction
      */
-    public static <T, M> Function<T, M> memoize(final Function<T, M> function) {
+    @NotNull
+    public static <T, M> Function<T, M> memoize(@NotNull final Function<T, M> function) {
         return new Function<T, M>() {
             private final Map<T, M> cache = new HashMap<>();
 
