@@ -336,6 +336,66 @@ public class FNDataUtil {
     }
 
     /**
+     * ディレクトリを監視
+     *
+     * @param path          監視対象パス
+     * @param listener      監視リスナー
+     * @param threadFactory 監視用スレッドのファクトリー
+     * @param events        監視イベントの類 StandardWatchEventKinds.ENTRY_MODIFYなど
+     * @return DirectoryWatcher
+     * @throws IOException 例外
+     */
+    @NotNull
+    public static FileSystemWatcher watchDirectory(@NotNull Path path, @NotNull FileSystemWatcher.WatchEventListener listener, @NotNull ThreadFactory threadFactory, @NotNull WatchEvent.Kind<?>... events) throws IOException {
+        return FileSystemWatcher.newDirectoryWatcher(path, listener, threadFactory, events);
+    }
+
+    /**
+     * ディレクトリを監視
+     *
+     * @param path     　監視対象パス
+     * @param listener 　監視リスナー
+     * @param events   　監視イベントの類 StandardWatchEventKinds.ENTRY_MODIFYなど
+     * @return DirectoryWatcher
+     * @throws IOException 例外
+     */
+    @NotNull
+    public static FileSystemWatcher watchDirectory(@NotNull Path path, @NotNull FileSystemWatcher.WatchEventListener listener, @NotNull WatchEvent.Kind<?>... events) throws IOException {
+        return FileSystemWatcher.newDirectoryWatcher(path, listener, events);
+    }
+
+    /**
+     * ディレクトリの階層すべてを監視
+     *
+     * @param rootPath      監視対象のルートパス
+     * @param listener      監視リスナー
+     * @param threadFactory 監視用スレッドのファクトリー
+     * @param flowSymbolic  シンボルリンクをたどるかどうか
+     * @param events        監視イベントの類 StandardWatchEventKinds.ENTRY_MODIFYなど
+     * @return DirectoryTreeWatcher
+     * @throws IOException 例外
+     */
+    @NotNull
+    public static FileSystemWatcher watchDirectoryTree(@NotNull Path rootPath, @NotNull FileSystemWatcher.WatchEventListener listener, @NotNull ThreadFactory threadFactory, boolean flowSymbolic, @NotNull WatchEvent.Kind<?>... events) throws IOException {
+        return FileSystemWatcher.newDirectoryTreeWatcher(rootPath, listener, threadFactory, flowSymbolic, events);
+    }
+
+    /**
+     * ディレクトリの階層すべてを監視
+     *
+     * @param rootPath     監視対象のルートパス
+     * @param listener     監視リスナー
+     * @param flowSymbolic シンボルリンクをたどるかどうか
+     * @param events       監視イベントの類 StandardWatchEventKinds.ENTRY_MODIFYなど
+     * @return DirectoryTreeWatcher
+     * @throws IOException 例外
+     */
+    @NotNull
+    public static FileSystemWatcher watchDirectoryTree(@NotNull Path rootPath, @NotNull FileSystemWatcher.WatchEventListener listener, boolean flowSymbolic, @NotNull WatchEvent.Kind<?>... events) throws IOException {
+        return FileSystemWatcher.newDirectoryTreeWatcher(rootPath, listener, flowSymbolic, events);
+    }
+
+    /**
      * インプットストリームをアウトプットストリームへ
      *
      * @param inputStream  In

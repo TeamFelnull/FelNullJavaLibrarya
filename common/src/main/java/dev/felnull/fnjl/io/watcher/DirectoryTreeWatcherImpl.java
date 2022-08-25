@@ -1,6 +1,6 @@
 package dev.felnull.fnjl.io.watcher;
 
-import dev.felnull.fnjl.util.FNArrayUtils;
+import dev.felnull.fnjl.util.FNArrayUtil;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.IOException;
@@ -27,8 +27,8 @@ public class DirectoryTreeWatcherImpl extends FileSystemWatcherImpl {
     protected DirectoryTreeWatcherImpl(Path rootPath, WatchEventListener watchEventListener, ThreadFactory threadFactory, boolean flowSymbolic, WatchEvent.Kind<?>... events) throws IOException {
         super(watchEventListener, threadFactory);
         this.rootPath = rootPath;
-        if (!FNArrayUtils.contains(events, StandardWatchEventKinds.ENTRY_CREATE)) {
-            events = FNArrayUtils.add(events, StandardWatchEventKinds.ENTRY_CREATE);
+        if (!FNArrayUtil.contains(events, StandardWatchEventKinds.ENTRY_CREATE)) {
+            events = FNArrayUtil.add(events, StandardWatchEventKinds.ENTRY_CREATE);
             create = false;
         } else {
             create = true;
@@ -44,11 +44,11 @@ public class DirectoryTreeWatcherImpl extends FileSystemWatcherImpl {
         watchingPaths.clear();
     }
 
-    public DirectoryTreeWatcherImpl(Path rootPath, WatchEventListener watchEventListener, boolean flowSymbolic, WatchEvent.Kind<?>... events) throws IOException {
+    protected DirectoryTreeWatcherImpl(Path rootPath, WatchEventListener watchEventListener, boolean flowSymbolic, WatchEvent.Kind<?>... events) throws IOException {
         super(watchEventListener, rootPath + "-directory-tree-watcher");
         this.rootPath = rootPath;
-        if (!FNArrayUtils.contains(events, StandardWatchEventKinds.ENTRY_CREATE)) {
-            events = FNArrayUtils.add(events, StandardWatchEventKinds.ENTRY_CREATE);
+        if (!FNArrayUtil.contains(events, StandardWatchEventKinds.ENTRY_CREATE)) {
+            events = FNArrayUtil.add(events, StandardWatchEventKinds.ENTRY_CREATE);
             create = false;
         } else {
             create = true;
