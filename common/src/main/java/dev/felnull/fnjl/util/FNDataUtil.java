@@ -22,9 +22,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -508,6 +510,32 @@ public class FNDataUtil {
     }
 
     /**
+     * メモ化
+     *
+     * @param supplier Supplier
+     * @param <T>      結果
+     * @return メモ化済みSupplier
+     */
+    @NotNull
+    public static <T> Supplier<T> memoize(@NotNull final Supplier<T> supplier) {
+        return new Supplier<T>() {
+            private final AtomicReference<T> cache = new AtomicReference<>();
+
+            @Override
+            public T get() {
+                synchronized (cache) {
+                    T ret = cache.get();
+                    if (ret == null) {
+                        ret = supplier.get();
+                        cache.set(ret);
+                    }
+                    return ret;
+                }
+            }
+        };
+    }
+
+    /**
      * リソースディレクトリ内のファイルの一覧を表示
      *
      * @param clazz 対象パッケージクラス
@@ -515,6 +543,7 @@ public class FNDataUtil {
      * @return エントリ
      */
     @NotNull
+
     public static List<ResourceEntry> resourceExtractEntry(@NotNull Class<?> clazz, @NotNull String path) {
         if (!path.startsWith("/")) path = "/" + path;
         URL url = clazz.getResource(path);
@@ -551,4 +580,29 @@ public class FNDataUtil {
         return Collections.unmodifiableList(entries);
     }
 
+    /**
+     * フォルダが存在しなければを作成する
+     * 作成できない場合は例外を投げる
+     *
+     * @param file ファイル
+     */
+    public static void wishMkdir(@NotNull File file) {
+        if (!file.exists() && !file.mkdirs())
+            throw new RuntimeException("Failed to create fold: " + file.getAbsolutePath());
+    }
+
+    /**
+     * フォルダが存在しなければを作成する
+     *
+     * @param file           ファイル
+     * @param failedConsumer 作成失敗時に呼び出される
+     * @return 作成できたか、もしくはそもそも存在したか
+     */
+    public static boolean wishMkdir(@NotNull File file, Consumer<File> failedConsumer) {
+        if (!file.exists() && !file.mkdirs()) {
+            failedConsumer.accept(file);
+            return false;
+        }
+        return true;
+    }
 }

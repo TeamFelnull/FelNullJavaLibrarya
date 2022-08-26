@@ -47,10 +47,9 @@ public class FNURLUtil {
      */
     @NotNull
     public static String getUserAgent() {
-        String jv = System.getProperty("java.version");
-        String jvn = System.getProperty("java.vm.name");
-        String jvv = System.getProperty("java.vm.version");
-        return String.format("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36 %s %s", "Java/" + jv + " (" + jvn + "; " + jvv + ")", "FelNullJavaLibrary/" + FelNullJavaLibrary.getVersion());
+        String jv = System.getProperty("java.specification.version");
+
+        return String.format("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36 %s %s", "Java/" + jv, "FelNullJavaLibrary/" + FelNullJavaLibrary.getVersion());
     }
 
     /**
