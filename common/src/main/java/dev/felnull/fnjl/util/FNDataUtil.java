@@ -289,10 +289,29 @@ public class FNDataUtil {
     @Nullable
     public static InputStream resourceExtractor(@NotNull Class<?> clazz, @NotNull String path) {
         if (path.startsWith("/")) path = path.substring(1);
-
         InputStream stream = clazz.getResourceAsStream("/" + path);
         if (stream == null) stream = ClassLoader.getSystemResourceAsStream(path);
-        return stream != null ? new BufferedInputStream(stream) : null;
+        return stream;
+    }
+
+    /**
+     * リソースフォルダからデータを抽出(バッファ)
+     *
+     * @param clazz リソースフォルダのクラス
+     * @param path  リソースパス
+     * @return InputStream
+     * @throws IOException 例外
+     */
+    @Nullable
+    public static InputStream resourceBufferedExtractor(@NotNull Class<?> clazz, @NotNull String path) throws IOException {
+        try (InputStream stream = resourceExtractor(clazz, path)) {
+            if (stream != null) {
+                try (InputStream bufStream = new BufferedInputStream(stream)) {
+                    return bufStream;
+                }
+            }
+        }
+        return null;
     }
 
     /**
