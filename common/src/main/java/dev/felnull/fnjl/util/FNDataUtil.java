@@ -281,17 +281,43 @@ public class FNDataUtil {
 
     /**
      * リソースフォルダからデータを抽出
+     * {@link #resourceExtracted}を利用してください
      *
      * @param clazz リソースフォルダのクラス
      * @param path  リソースパス
      * @return InputStream
      */
     @Nullable
+    @Deprecated
     public static InputStream resourceExtractor(@NotNull Class<?> clazz, @NotNull String path) {
+        try {
+            return resourceBufferedExtracted(clazz, path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * リソースフォルダからデータを抽出
+     *
+     * @param clazz リソースフォルダのクラス
+     * @param path  リソースパス
+     * @return InputStream
+     */
+    public static InputStream resourceExtracted(@NotNull Class<?> clazz, @NotNull String path) throws IOException {
         if (path.startsWith("/")) path = path.substring(1);
-        InputStream stream = clazz.getResourceAsStream("/" + path);
-        if (stream == null) stream = ClassLoader.getSystemResourceAsStream(path);
-        return stream;
+
+        try (InputStream stream = clazz.getResourceAsStream("/" + path)) {
+            if (stream != null)
+                return stream;
+        }
+
+        try (InputStream stream = ClassLoader.getSystemResourceAsStream(path)) {
+            if (stream != null)
+                return stream;
+        }
+
+        return null;
     }
 
     /**
@@ -303,8 +329,8 @@ public class FNDataUtil {
      * @throws IOException 例外
      */
     @Nullable
-    public static InputStream resourceBufferedExtractor(@NotNull Class<?> clazz, @NotNull String path) throws IOException {
-        try (InputStream stream = resourceExtractor(clazz, path)) {
+    public static InputStream resourceBufferedExtracted(@NotNull Class<?> clazz, @NotNull String path) throws IOException {
+        try (InputStream stream = resourceExtracted(clazz, path)) {
             if (stream != null) {
                 try (InputStream bufStream = new BufferedInputStream(stream)) {
                     return bufStream;

@@ -3,7 +3,6 @@ package dev.felnull.fnjln;
 import dev.felnull.fnjl.os.OSs;
 import dev.felnull.fnjl.util.FNDataUtil;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,19 +63,18 @@ public class FelNullJavaLibraryNatives {
             return;
         }
 
-        InputStream stream = FNDataUtil.resourceExtractor(FelNullJavaLibraryNatives.class, libraryLocation + libName);
-        if (stream != null) {
-            stream = new BufferedInputStream(stream);
-            try {
+        try (InputStream stream = FNDataUtil.resourceBufferedExtracted(FelNullJavaLibraryNatives.class, libraryLocation + libName)) {
+            if (stream != null) {
                 byte[] data = FNDataUtil.streamToByteArray(stream);
                 outLibFIle.delete();
                 Files.write(outLibFIle.toPath(), data);
                 loaded = loadLibrary(outLibFIle);
-            } catch (IOException ex) {
-                ex.printStackTrace();
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            init = true;
         }
-        init = true;
     }
 
     private static boolean loadLibrary(File file) {
