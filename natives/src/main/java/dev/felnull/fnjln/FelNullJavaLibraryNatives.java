@@ -26,7 +26,7 @@ public class FelNullJavaLibraryNatives {
     public synchronized static void init() {
         String tempDir = System.getProperty("java.io.tmpdir");
         Path path = Paths.get(tempDir).resolve("fnjl_natives");
-        path.toFile().mkdirs();
+        FNDataUtil.wishMkdir(path.toFile());
         init(path);
     }
 
@@ -63,7 +63,7 @@ public class FelNullJavaLibraryNatives {
             return;
         }
 
-        try (InputStream stream = FNDataUtil.resourceBufferedExtracted(FelNullJavaLibraryNatives.class, libraryLocation + libName)) {
+        try (InputStream stream = FNDataUtil.resourceExtractor(FelNullJavaLibraryNatives.class, libraryLocation + libName)) {
             if (stream != null) {
                 byte[] data = FNDataUtil.streamToByteArray(stream);
                 outLibFIle.delete();
