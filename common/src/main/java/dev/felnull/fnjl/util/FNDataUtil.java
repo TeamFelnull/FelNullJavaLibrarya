@@ -7,6 +7,7 @@ import dev.felnull.fnjl.io.watcher.FileSystemWatcher;
 import dev.felnull.fnjl.io.watcher.SingleFileSystemWatcherImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -47,7 +48,8 @@ public class FNDataUtil {
      * @return 変換後
      * @throws IOException 例外
      */
-    public static String readAllString(InputStream stream) throws IOException {
+    @NotNull
+    public static String readAllString(@NotNull InputStream stream) throws IOException {
         return readAllString(stream, StandardCharsets.UTF_8);
     }
 
@@ -59,7 +61,8 @@ public class FNDataUtil {
      * @return 変換後
      * @throws IOException 例外
      */
-    public static String readAllString(InputStream stream, Charset cs) throws IOException {
+    @NotNull
+    public static String readAllString(@NotNull InputStream stream, @NotNull Charset cs) throws IOException {
         try (Reader reader = new InputStreamReader(stream, cs)) {
             return readAllString(reader);
         }
@@ -72,7 +75,8 @@ public class FNDataUtil {
      * @return 変換後
      * @throws IOException 例外
      */
-    public static String readAllString(Reader reader) throws IOException {
+    @NotNull
+    public static String readAllString(@NotNull Reader reader) throws IOException {
         StringBuilder sb = new StringBuilder();
         boolean flg = false;
         try (BufferedReader breader = new BufferedReader(reader)) {
@@ -87,30 +91,40 @@ public class FNDataUtil {
     }
 
     /**
-     * バッファー付きストリームをバイト配列へ変換
+     * バッファー付きでストリームをバイト配列へ変換
      *
      * @param stream ストリーム
      * @return 変換済みバイト配列
      * @throws IOException 変換失敗
      */
-    public static byte[] bufStreamToByteArray(InputStream stream) throws IOException {
+    public static byte[] readAllBytesBuff(@NotNull InputStream stream) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        bufInputToOutput(stream, bout);
+        inputToOutputBuff(stream, bout);
         return bout.toByteArray();
     }
 
+    @Deprecated
+    public static byte[] bufStreamToByteArray(InputStream stream) throws IOException {
+        return readAllBytesBuff(stream);
+    }
+
     /**
-     * バッファー付きストリームをバイト配列へ変換
+     * バッファー付きでストリームをバイト配列へ変換
      *
-     * @param stream ストリーム
-     * @param size   一度に書き込む量
+     * @param stream   ストリーム
+     * @param readSize 一度に書き込む量
      * @return 変換済みバイト配列
      * @throws IOException 変換失敗
      */
-    public static byte[] bufStreamToByteArray(InputStream stream, int size) throws IOException {
+    public static byte[] readAllBytesBuff(@NotNull InputStream stream, @Range(from = 0, to = Integer.MAX_VALUE) int readSize) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        bufInputToOutput(stream, bout, size);
+        inputToOutputBuff(stream, bout, readSize);
         return bout.toByteArray();
+    }
+
+    @Deprecated
+    public static byte[] bufStreamToByteArray(InputStream stream, int size) throws IOException {
+        return readAllBytesBuff(stream, size);
     }
 
     /**
@@ -120,24 +134,34 @@ public class FNDataUtil {
      * @return 変換済みバイト配列
      * @throws IOException 変換失敗
      */
-    public static byte[] streamToByteArray(InputStream stream) throws IOException {
+    public static byte[] readAllBytes(@NotNull InputStream stream) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         inputToOutput(stream, bout);
         return bout.toByteArray();
     }
 
+    @Deprecated
+    public static byte[] streamToByteArray(InputStream stream) throws IOException {
+        return readAllBytes(stream);
+    }
+
     /**
      * ストリームをバイト配列へ変換
      *
-     * @param stream ストリーム
-     * @param size   一度に書き込む量
+     * @param stream   ストリーム
+     * @param readSize 一度に書き込む量
      * @return 変換済みバイト配列
      * @throws IOException 変換失敗
      */
-    public static byte[] streamToByteArray(InputStream stream, int size) throws IOException {
+    public static byte[] readAllBytes(@NotNull InputStream stream, @Range(from = 0, to = Integer.MAX_VALUE) int readSize) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        inputToOutput(stream, bout, size);
+        inputToOutput(stream, bout, readSize);
         return bout.toByteArray();
+    }
+
+    @Deprecated
+    public static byte[] streamToByteArray(InputStream stream, int size) throws IOException {
+        return readAllBytes(stream, size);
     }
 
     /**
@@ -162,7 +186,8 @@ public class FNDataUtil {
      * @return 解凍済みストリーム
      * @throws IOException 変換失敗
      */
-    public static InputStream unzipGz(InputStream data) throws IOException {
+    @NotNull
+    public static InputStream unzipGz(@NotNull InputStream data) throws IOException {
         return new GZIPInputStream(data);
     }
 
@@ -288,12 +313,10 @@ public class FNDataUtil {
      */
     @Nullable
     public static InputStream resourceExtractor(@NotNull Class<?> clazz, @NotNull String path) {
-        if (path.startsWith("/"))
-            path = path.substring(1);
+        if (path.startsWith("/")) path = path.substring(1);
 
         InputStream stream = clazz.getResourceAsStream("/" + path);
-        if (stream == null)
-            stream = ClassLoader.getSystemResourceAsStream(path);
+        if (stream == null) stream = ClassLoader.getSystemResourceAsStream(path);
         return stream != null ? new BufferedInputStream(stream) : null;
     }
 
@@ -404,10 +427,12 @@ public class FNDataUtil {
      *
      * @param inputStream  In
      * @param outputStream Out
+     * @return 合計サイズ
      * @throws IOException 例外
      */
-    public static void inputToOutput(InputStream inputStream, OutputStream outputStream) throws IOException {
-        inputToOutput(inputStream, outputStream, 1024);
+    @Range(from = 0, to = Integer.MAX_VALUE)
+    public static int inputToOutput(@NotNull InputStream inputStream, @NotNull OutputStream outputStream) throws IOException {
+        return inputToOutput(inputStream, outputStream, 1024);
     }
 
     /**
@@ -415,17 +440,49 @@ public class FNDataUtil {
      *
      * @param inputStream  In
      * @param outputStream Out
-     * @param size         一度に書き込む量
+     * @param readSize     一度に書き込む量
+     * @return 合計サイズ
      * @throws IOException 例外
      */
-    public static void inputToOutput(InputStream inputStream, OutputStream outputStream, int size) throws IOException {
+    @Range(from = 0, to = Integer.MAX_VALUE)
+    public static int inputToOutput(@NotNull InputStream inputStream, @NotNull OutputStream outputStream, @Range(from = 0, to = Integer.MAX_VALUE) int readSize) throws IOException {
+        int ct = 0;
         try (InputStream in = inputStream; OutputStream out = outputStream) {
-            byte[] data = new byte[size];
+            byte[] data = new byte[readSize];
             int len;
             while ((len = in.read(data)) != -1) {
+                ct += len;
                 out.write(data, 0, len);
             }
         }
+        return ct;
+    }
+
+    /**
+     * インプットストリームをアウトプットストリームへ
+     *
+     * @param inputStream  In
+     * @param outputStream Out
+     * @return 合計サイズ
+     * @throws IOException 例外
+     */
+    @Range(from = 0, to = Integer.MAX_VALUE)
+    public static int i2o(@NotNull InputStream inputStream, @NotNull OutputStream outputStream) throws IOException {
+        return inputToOutput(inputStream, outputStream);
+    }
+
+    /**
+     * インプットストリームをアウトプットストリームへ
+     *
+     * @param inputStream  In
+     * @param outputStream Out
+     * @param readSize     一度に書き込む量
+     * @return 合計サイズ
+     * @throws IOException 例外
+     */
+    @Range(from = 0, to = Integer.MAX_VALUE)
+    public static int i2o(@NotNull InputStream inputStream, @NotNull OutputStream outputStream, @Range(from = 0, to = Integer.MAX_VALUE) int readSize) throws IOException {
+        return inputToOutput(inputStream, outputStream, readSize);
     }
 
     /**
@@ -433,11 +490,18 @@ public class FNDataUtil {
      *
      * @param inputStream  In
      * @param outputStream Out
-     * @param size         一度に書き込む量
+     * @param readSize     一度に書き込む量
+     * @return 合計サイズ
      * @throws IOException 例外
      */
+    @Range(from = 0, to = Integer.MAX_VALUE)
+    public static int inputToOutputBuff(@NotNull InputStream inputStream, @NotNull OutputStream outputStream, @Range(from = 0, to = Integer.MAX_VALUE) int readSize) throws IOException {
+        return inputToOutput(new BufferedInputStream(inputStream), new BufferedOutputStream(outputStream), readSize);
+    }
+
+    @Deprecated
     public static void bufInputToOutput(InputStream inputStream, OutputStream outputStream, int size) throws IOException {
-        inputToOutput(new BufferedInputStream(inputStream), new BufferedOutputStream(outputStream), size);
+        inputToOutputBuff(inputStream, outputStream, size);
     }
 
     /**
@@ -445,10 +509,64 @@ public class FNDataUtil {
      *
      * @param inputStream  In
      * @param outputStream Out
+     * @return 合計サイズ
      * @throws IOException 例外
      */
+    @Range(from = 0, to = Integer.MAX_VALUE)
+    public static int inputToOutputBuff(@NotNull InputStream inputStream, @NotNull OutputStream outputStream) throws IOException {
+        return inputToOutput(new BufferedInputStream(inputStream), new BufferedOutputStream(outputStream));
+    }
+
+    @Deprecated
     public static void bufInputToOutput(InputStream inputStream, OutputStream outputStream) throws IOException {
-        inputToOutput(new BufferedInputStream(inputStream), new BufferedOutputStream(outputStream));
+        inputToOutputBuff(inputStream, outputStream);
+    }
+
+    /**
+     * インプットストリームをアウトプットストリームへ
+     * サイズ制限付き
+     * 超えた場合は切り上げられる
+     *
+     * @param inputStream  In
+     * @param outputStream Out
+     * @param readSize     一度に書き込む量
+     * @param limit        制限サイズ
+     * @return 制限サイズを超えた場合は-1、それ以外はサイズ
+     * @throws IOException 例外
+     */
+    @Range(from = -1, to = Integer.MAX_VALUE)
+    public static int inputToOutputLimit(@NotNull InputStream inputStream, @NotNull OutputStream outputStream, @Range(from = 0, to = Integer.MAX_VALUE) int readSize, @Range(from = 0, to = Integer.MAX_VALUE) int limit) throws IOException {
+        int ct = 0;
+        boolean flg = false;
+        try (InputStream in = inputStream; OutputStream out = outputStream) {
+            byte[] data = new byte[readSize];
+            int len;
+            while (!flg && (len = in.read(data)) != -1) {
+                if ((ct + len) > limit) {
+                    len = limit - ct;
+                    flg = true;
+                }
+                ct += len;
+                out.write(data, 0, len);
+            }
+        }
+        return flg ? -1 : ct;
+    }
+
+    /**
+     * インプットストリームをアウトプットストリームへ
+     * サイズ制限付き
+     * 超えた場合は切り上げられる
+     *
+     * @param inputStream  In
+     * @param outputStream Out
+     * @param limit        制限サイズ
+     * @return 制限サイズを超えた場合は-1、それ以外はサイズ
+     * @throws IOException 例外
+     */
+    @Range(from = -1, to = Integer.MAX_VALUE)
+    public static int inputToOutputLimit(@NotNull InputStream inputStream, @NotNull OutputStream outputStream, @Range(from = 0, to = Integer.MAX_VALUE) int limit) throws IOException {
+        return inputToOutputLimit(inputStream, outputStream, 1024, limit);
     }
 
     /**

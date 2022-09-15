@@ -65,7 +65,7 @@ public class FelNullJavaLibraryNatives {
 
         try (InputStream stream = FNDataUtil.resourceExtractor(FelNullJavaLibraryNatives.class, libraryLocation + libName)) {
             if (stream != null) {
-                byte[] data = FNDataUtil.streamToByteArray(stream);
+                byte[] data = FNDataUtil.readAllBytes(stream);
                 outLibFIle.delete();
                 Files.write(outLibFIle.toPath(), data);
                 loaded = loadLibrary(outLibFIle);

@@ -78,7 +78,7 @@ public class FNFace {
             case 2:
                 return new FN3dLine(getToX(), getToY(), getToZ(), getFromX(), getToY(), getFromZ());
             case 3:
-                return new FN3dLine(getFromX(), getFromY(), getFromZ(),  getFromX(), getToY(), getFromZ());
+                return new FN3dLine(getFromX(), getFromY(), getFromZ(), getFromX(), getToY(), getFromZ());
         }
         throw new IllegalStateException("Invalid edge number");
     }

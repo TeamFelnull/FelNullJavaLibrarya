@@ -258,7 +258,7 @@ public class FNURLUtil {
         byte[] res;
         String encoding = con.getContentEncoding();
         try (InputStream in = con.getInputStream()) {
-            res = FNDataUtil.streamToByteArray(in);
+            res = FNDataUtil.readAllBytesBuff(in);
         }
         return new PostResponse(res, sts, encoding);
     }
