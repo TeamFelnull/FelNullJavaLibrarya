@@ -534,16 +534,16 @@ public class FNDataUtil {
      * @return 制限サイズを超えた場合は-1、それ以外はサイズ
      * @throws IOException 例外
      */
-    @Range(from = -1, to = Integer.MAX_VALUE)
-    public static int inputToOutputLimit(@NotNull InputStream inputStream, @NotNull OutputStream outputStream, @Range(from = 0, to = Integer.MAX_VALUE) int readSize, @Range(from = 0, to = Integer.MAX_VALUE) int limit) throws IOException {
-        int ct = 0;
+    @Range(from = -1, to = Long.MAX_VALUE)
+    public static long inputToOutputLimit(@NotNull InputStream inputStream, @NotNull OutputStream outputStream, @Range(from = 0, to = Integer.MAX_VALUE) int readSize, @Range(from = 0, to = Long.MAX_VALUE) long limit) throws IOException {
+        long ct = 0;
         boolean flg = false;
         try (InputStream in = inputStream; OutputStream out = outputStream) {
             byte[] data = new byte[readSize];
             int len;
             while (!flg && (len = in.read(data)) != -1) {
                 if ((ct + len) > limit) {
-                    len = limit - ct;
+                    len = (int) (limit - ct);
                     flg = true;
                 }
                 ct += len;
@@ -564,8 +564,8 @@ public class FNDataUtil {
      * @return 制限サイズを超えた場合は-1、それ以外はサイズ
      * @throws IOException 例外
      */
-    @Range(from = -1, to = Integer.MAX_VALUE)
-    public static int inputToOutputLimit(@NotNull InputStream inputStream, @NotNull OutputStream outputStream, @Range(from = 0, to = Integer.MAX_VALUE) int limit) throws IOException {
+    @Range(from = -1, to = Long.MAX_VALUE)
+    public static long inputToOutputLimit(@NotNull InputStream inputStream, @NotNull OutputStream outputStream, @Range(from = 0, to = Long.MAX_VALUE) long limit) throws IOException {
         return inputToOutputLimit(inputStream, outputStream, 1024, limit);
     }
 
