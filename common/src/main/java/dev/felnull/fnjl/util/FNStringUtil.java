@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * 文字列関係
@@ -15,6 +16,7 @@ import java.util.UUID;
  */
 public class FNStringUtil {
     private static final String[] unit = {"K", "M", "G", "T", "P", "E", "Z", "Y"};
+    private static final Pattern FILE_UNUSABLE_REGEX = Pattern.compile("[\\\\/:*?\"<>|]");
 
     /**
      * nullが渡されたら空を返す
@@ -304,5 +306,27 @@ public class FNStringUtil {
         if (hourTime > 0 || hour)
             return String.format("%02d:%02d:%02d", hourTime, minTime, secTime);
         return String.format("%02d:%02d", minTime, secTime);
+    }
+
+    /**
+     * ファイルで利用不可な文字を置き換える
+     *
+     * @param name      ファイル名
+     * @param escapeStr 置き換え文字
+     * @return 置き換え済み文字
+     */
+    public static String escapeFileName(String name, String escapeStr) {
+        name = FILE_UNUSABLE_REGEX.matcher(name).replaceAll(escapeStr);
+        return name;
+    }
+
+    /**
+     * ファイルで利用不可な文字を消し去る
+     *
+     * @param name ファイル名
+     * @return 置き換え済み文字
+     */
+    public static String escapeFileName(String name) {
+        return escapeFileName(name, "");
     }
 }
