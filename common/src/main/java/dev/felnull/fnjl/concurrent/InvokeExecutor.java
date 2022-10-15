@@ -26,4 +26,13 @@ public class InvokeExecutor implements Executor {
         while (!tasks.isEmpty())
             tasks.poll().run();
     }
+
+    /**
+     * 現在の実行待ちタスクの数
+     *
+     * @return タスク数
+     */
+    public int getTaskCount() {
+        return tasks.size();
+    }
 }

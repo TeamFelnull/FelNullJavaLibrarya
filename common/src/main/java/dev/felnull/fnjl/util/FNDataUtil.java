@@ -21,6 +21,7 @@ import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -618,13 +619,11 @@ public class FNDataUtil {
     @NotNull
     public static <T, M> Function<T, M> memoize(@NotNull final Function<T, M> function) {
         return new Function<T, M>() {
-            private final Map<T, M> cache = new HashMap<>();
+            private final Map<T, M> cache = new ConcurrentHashMap<>();
 
             @Override
             public M apply(T t) {
-                synchronized (cache) {
-                    return cache.computeIfAbsent(t, function);
-                }
+                return cache.computeIfAbsent(t, function);
             }
         };
     }
