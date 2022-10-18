@@ -28,6 +28,21 @@ public class InvokeExecutor implements Executor {
     }
 
     /**
+     * タスクを実行する
+     *
+     * @param max 実行する最大タスク数
+     */
+    public void runTasks(int max) {
+        int ct = 0;
+        while (!tasks.isEmpty()) {
+            tasks.poll().run();
+            ct++;
+            if (ct >= max)
+                break;
+        }
+    }
+
+    /**
      * 現在の実行待ちタスクの数
      *
      * @return タスク数
