@@ -20,19 +20,26 @@ public class InvokeExecutor implements Executor {
     }
 
     /**
-     * タスクを実行する
+     * すべてのタスクを実行する
+     *
+     * @return 実行したタスク数
      */
-    public void runTasks() {
-        while (!tasks.isEmpty())
+    public int runTasks() {
+        int ct = 0;
+        while (!tasks.isEmpty()) {
             tasks.poll().run();
+            ct++;
+        }
+        return ct;
     }
 
     /**
-     * タスクを実行する
+     * 最大指定した数のタスクをすべて実行する
      *
      * @param max 実行する最大タスク数
+     * @return 実行したタスク数
      */
-    public void runTasks(int max) {
+    public int runTasks(int max) {
         int ct = 0;
         while (!tasks.isEmpty()) {
             tasks.poll().run();
@@ -40,6 +47,7 @@ public class InvokeExecutor implements Executor {
             if (ct >= max)
                 break;
         }
+        return ct;
     }
 
     /**
