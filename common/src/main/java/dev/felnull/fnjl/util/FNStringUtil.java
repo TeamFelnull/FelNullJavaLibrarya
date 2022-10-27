@@ -329,4 +329,21 @@ public class FNStringUtil {
     public static String escapeFileName(String name) {
         return escapeFileName(name, "");
     }
+
+    /**
+     * URLとパスを連結
+     *
+     * @param base ベースのURL
+     * @param path パス
+     * @return 連結済み文字列
+     */
+    public static String urlConcatenation(String base, String path) {
+        if (!base.endsWith("/"))
+            base = base + "/";
+
+        if (path.startsWith("/"))
+            path = path.substring(1);
+
+        return base + path;
+    }
 }
