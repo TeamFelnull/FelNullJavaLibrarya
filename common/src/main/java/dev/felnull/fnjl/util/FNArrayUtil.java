@@ -3,6 +3,12 @@ package dev.felnull.fnjl.util;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * 配列関連
+ *
+ * @author MORIMORI0317
+ * @since 1.57
+ */
 public class FNArrayUtil {
     /**
      * 配列の最後に値を追加
