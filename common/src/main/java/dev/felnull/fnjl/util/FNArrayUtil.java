@@ -2,6 +2,7 @@ package dev.felnull.fnjl.util;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * 配列関連
@@ -179,5 +180,16 @@ public class FNArrayUtil {
         System.arraycopy(array, index, n, index + 1, array.length - index);
         n[index] = value;
         return n;
+    }
+
+    /**
+     * サプライヤーの配列からすべてを取得し配列へ変換
+     *
+     * @param suppliers サプライヤー
+     * @param <T>       型
+     * @return 配列
+     */
+    public static <T> T[] allGet(Supplier<T>[] suppliers) {
+        return (T[]) Arrays.stream(suppliers).map(n -> n.get()).toArray();
     }
 }
