@@ -2,6 +2,12 @@ package dev.felnull.fnjl.util;
 
 import java.lang.reflect.Constructor;
 
+/**
+ * リフレクション関係
+ *
+ * @author MORIMORI0317
+ * @since 1.42
+ */
 public class FNReflectionUtil {
     public static Object newInstance(Class<?> clazz, Object... objects) {
         try {
@@ -27,4 +33,5 @@ public class FNReflectionUtil {
             return null;
         }
     }
+
 }
