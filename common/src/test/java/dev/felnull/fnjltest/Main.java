@@ -11,7 +11,7 @@ public class Main {
         strs[0] = () -> "114514";
         strs[1] = () -> "FCOH";
         strs[2] = () -> "TEST";
-        String[] ret = FNArrayUtil.allGet(String.class, strs);
+        String[] ret = FNArrayUtil.allGet(strs, String[]::new);
         System.out.println(Arrays.toString(ret));
     }
 }

@@ -1,8 +1,8 @@
 package dev.felnull.fnjl.util;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
 /**
@@ -186,16 +186,11 @@ public class FNArrayUtil {
     /**
      * サプライヤーの配列からすべてを取得し配列へ変換
      *
-     * @param clazz     型クラス
      * @param suppliers サプライヤー
      * @param <T>       型
      * @return 配列
      */
-    public static <T> T[] allGet(Class<T> clazz, Supplier<T>[] suppliers) {
-        T[] array = (T[]) Array.newInstance(clazz, suppliers.length);
-        for (int i = 0; i < suppliers.length; i++) {
-            array[i] = suppliers[i].get();
-        }
-        return array;
+    public static <T> T[] allGet(Supplier<T>[] suppliers, IntFunction<T[]> generator) {
+        return Arrays.stream(suppliers).map(Supplier::get).toArray(generator);
     }
 }
