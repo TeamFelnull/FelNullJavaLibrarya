@@ -1,17 +1,20 @@
 package dev.felnull.fnjltest;
 
-import dev.felnull.fnjl.util.FNArrayUtil;
+import dev.felnull.fnjl.util.FNRuntimeUtil;
 
-import java.util.Arrays;
-import java.util.function.Supplier;
+import java.util.Date;
+import java.util.Timer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Supplier<String>[] strs = new Supplier[3];
-        strs[0] = () -> "114514";
-        strs[1] = () -> "FCOH";
-        strs[2] = () -> "TEST";
-        String[] ret = FNArrayUtil.allGet(strs, String[]::new);
-        System.out.println(Arrays.toString(ret));
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
+        FNRuntimeUtil.loopDayRunner(new Timer(), executorService, 16, 54, () -> {
+            System.out.println("ｳｧｧ!!ｵﾚﾓｲｯﾁｬｳｩｩｩ!!!ｳｳｳｳｳｳｳｳｳｩｩｩｩｩｩｩｩｳｳｳｳｳｳｳｳ!ｲｨｨｲｨｨｨｲｲｲｨｲｲｲｲ: " + new Date());
+        });
+
+        Thread.sleep(1000 * 114514);
     }
 }
