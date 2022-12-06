@@ -23,14 +23,29 @@ public class FNRuntimeUtil {
      * @param runnable 実行
      */
     public static void loopDayRunner(@NotNull Timer timer, @NotNull Executor executor, @Range(from = 0, to = 23) int hours, @Range(from = 0, to = 59) int minutes, @NotNull Runnable runnable) {
+        loopDayRunner(timer, executor, hours, minutes, 0, runnable);
+    }
+
+    /**
+     * １日ごとに決まった時間に実行
+     *
+     * @param timer    タイマー
+     * @param executor エクスキューター
+     * @param hours    時
+     * @param minutes  分
+     * @param second   秒
+     * @param runnable 実行
+     */
+    public static void loopDayRunner(@NotNull Timer timer, @NotNull Executor executor, @Range(from = 0, to = 23) int hours, @Range(from = 0, to = 59) int minutes, @Range(from = 0, to = 59) int second, @NotNull Runnable runnable) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
-        if (calendar.get(Calendar.HOUR_OF_DAY) > hours || (calendar.get(Calendar.HOUR_OF_DAY) == hours && calendar.get(Calendar.MINUTE) >= minutes))
+        if (calendar.get(Calendar.HOUR_OF_DAY) > hours || (calendar.get(Calendar.HOUR_OF_DAY) == hours && calendar.get(Calendar.MINUTE) > minutes) || (calendar.get(Calendar.HOUR_OF_DAY) == hours && calendar.get(Calendar.MINUTE) == minutes && calendar.get(Calendar.SECOND) >= second))
             calendar.add(Calendar.DATE, 1);
 
         calendar.set(Calendar.HOUR_OF_DAY, hours);
         calendar.set(Calendar.MINUTE, minutes);
+        calendar.set(Calendar.SECOND, second);
 
         loopDayRunner_(calendar, timer, executor, runnable);
     }
