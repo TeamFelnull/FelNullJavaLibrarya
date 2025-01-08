@@ -122,7 +122,7 @@ public class OSs {
     }
 
     public static enum Type {
-        WINDOWS("windows", "dll"), LINUX("linux", "so"), MAC("mac", "jnilib"), OTHER(null, null);
+        WINDOWS("windows", "dll"), LINUX("linux", "so"), MAC("mac", "jnilib"), OTHER("", "so");
         private final String name;
         private final String libName;
 
